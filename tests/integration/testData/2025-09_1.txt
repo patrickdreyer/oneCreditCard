@@ -1,0 +1,231 @@
+migrosCumulus <#>
+migrosCumulus <#>
+
+  * Cockpit <#>
+  * Transaktionen <#>
+  * Rechnungen <#>
+  * Karte <#>
+  * Benutzerkonto <#>
+  * Log out <#>
+
+  * Log out <#>
+
+
+    Bitte überprüfen Sie Ihre E-Mail-Adresse
+
+Ihre E-Mail-Adresse wurde noch nicht geprüft. Schauen Sie in Ihrem E-
+Mail-Postfach nach und bestätigen Sie Ihre E-Mail-Adresse. Falls Sie
+keine E-Mail erhalten, können Sie diese erneut senden oder Ihre E-Mail-
+Adresse ändern.
+
+E-Mail erneut senden E-Mail Adresse ändern
+
+//
+
+*Aufgrund von Inaktivität ausgeloggt*
+
+Melden Sie sich zukünftig mit dem Logout-Button oben rechts ab, um die
+Sicherheit zu erhöhen.
+
+
+    In Kürze erhalten Sie eine neue Karte
+
+image description
+
+
+      Warum eine neue Karte?
+
+Ihre Karte läuft bald ab. Aus diesem Grund erhalten Sie in einigen
+Wochen eine neue Karte mit einer neuen Kartennummer.
+
+image description
+
+
+      Wie geht's weiter?
+
+Verwenden Sie Ihre neue Karte, sobald Sie sie erhalten. Aktualisieren
+Sie bitte Ihre Kartennummer für regelmässige Zahlungen wie Abonnemente.
+
+image description
+
+
+      Was ändert sich?
+
+Nur Ihre Kartennummer. Ihr PIN-Code, Ihre surprize Punkte und bereits
+getätigten Buchungen bleiben unverändert.
+
+OK
+
+
+    Transaktionen
+
+Visa
+*Visa **•••• 1234 **CHF*John Doe
+
+Alle Transaktionen
+suchen
+
+*Betrag*
+von
+
+bis
+
+*Datum*
+von
+
+bis
+
+zurücksetzen
+suchen
+
+Erweiterte Suchoptionen Erweiterte Suchoptionen schliessen
+
+September
+
+Essen & Trinken
+
+*Restaurant 2*
+30.09.2025 21:29 Bern
+*145.00*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
+Essen & Trinken
+
+*- My Lunch Place*
+30.09.2025 11:36 Olten
+*15.50*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
+TRX123245678
+
+*SBB CFF FFS*
+28.09.2025 13:56
+*27.60*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
+Essen & Trinken
+
+*- My Lunch Place*
+25.09.2025 11:47 Olten
+*13.90*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
+Fahrzeug
+
+*Gasstation Winterthur*
+23.09.2025 18:59 Winterthur
+*89.50*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
+Essen & Trinken
+
+*- My Lunch Place*
+23.09.2025 12:15 Olten
+*4.30*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
+Essen & Trinken
+
+*Restaurant 2*
+22.09.2025 20:22 Zuerich
+*128.00*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
+TRX123245678
+
+*SBB CFF FFS*
+22.09.2025 18:45
+*6.40*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
+Essen & Trinken
+
+*- My Lunch Place*
+22.09.2025 11:49 Olten
+*18.10*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
+Essen & Trinken
+
+*Restaurant 3*
+19.09.2025 11:09 ZUERICH
+*11.00*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
+Essen & Trinken
+
+*- My Lunch Place*
+15.09.2025 13:35 Olten
+*8.10*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
+
+  * // Pendente Transaktionen
+
+  *
+  *
+  * 1
+  * 2
+  *
+  *
+
+Hinweis:
+
+Der Devisenkurs ist provisorisch und kann geringfügig vom Devisenkurs in
+der Monatsabrechnung abweichen. Massgebend ist in jedem Fall der in der
+Monatsrechnung angegebene Devisenkurs.
+
+Für Beanstandungen von Transaktionen wenden Sie sich bitte an Ihren
+Kartenherausgeber <https://one.viseca.ch/public/de/support#faq07>
+
+one <#>
+
+
+          Sprache
+
+  * DE
+  * FR
+  * IT
+  * EN 
+
+
+          Download App
+
+App Store (iOS) <https://itunes.apple.com/us/app/visecaone/id970439160?
+ls=1&mt=8>
+
+Play Store (Android) <https://play.google.com/store/apps/details?
+id=ch.viseca.visecaone>
+
+
+          Support
+
+FAQ <https://one-digitalservice.ch/public/de/support>
+
+Nutzungsbestimmungen <https://one-digitalservice.ch/public/de/bestimmungen>
+
+Impressum <https://one-digitalservice.ch/public/de/impressum>
+
+
+          Karte sperren
+
+in der one App oder
+
++41 58 958 83 83 <tel:+41%E2%80%8658%E2%80%86958%E2%80%8683%E2%80%8683>
+(24h)
+
+
+    Aufgrund von Inaktivität ausgeloggt
+
+Zu Ihrer Sicherheit haben wir Sie automatisch abgemeldet.
+
+Login
+//
+
+
+    Zeitlimite überschritten
+
+Die Zeitlimite ist überschritten. Starten Sie den Prozess erneut.
+
+Ok
+//
+
+
+    Automatischer Logout
+
+Aus Sicherheitsgründen wurden Sie automatisch abgemeldet.
+Bitte melden Sie sich erneut an, um fortzufahren.
+
+Login
+//
+
+Cookiebot session tracker icon loaded
