@@ -41,7 +41,8 @@ oneCreditCart/
 4. **Code Proposals**: Show diffs/descriptions only, not full code blocks unless explicitly requested
 5. **Confirmation Required**: Any changes within the project must be confirmed by the user before execution
 6. **Short & Concise**: Keep responses brief and to the point. No unnecessary explanations.
-7. **No Assumptions**: Always ask for approval before:
+7. **English Only**: All responses and artifacts must be in English, regardless of chat language used
+8. **No Assumptions**: Always ask for approval before:
    - Creating new files or directories
    - Modifying existing code
    - Installing dependencies
