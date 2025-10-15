@@ -11,7 +11,7 @@
 - **Container Engine**: Podman (instead of Docker)
 - **Development Platform**: VS Code Dev Containers
 - **Cross-Platform Solution**: Ubuntu + Mac + Windows compatibility via containers
-- **Base Environment**: Python 3.11 with project dependencies
+- **Base Environment**: Python 3.13 with project dependencies
 
 ## Multi-Platform Collaboration Context
 ### Current Development Setup Decision
@@ -28,8 +28,8 @@ When Alexandra collaborates with AI, she will implement:
 5. **Development workflow** testing and validation
 
 ### DevContainer Technical Specifications
-- **Base Image**: python:3.11-slim
-- **Key Dependencies**: odfpy, pytest, black, flake8, mypy
+- **Base Image**: python:3.13-bookworm
+- **Key Dependencies**: odfpy, pytest, black, flake8, mypy, ruff
 - **VS Code Configuration**: Python formatter, linter, testing setup
 - **Container Path**: `"dev.containers.dockerPath": "podman"`
 

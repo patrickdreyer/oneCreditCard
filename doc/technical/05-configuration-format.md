@@ -87,7 +87,7 @@ If the configuration becomes significantly more complex or user feedback indicat
 - ✅ No ambiguous syntax
 
 **Cons:**
-- ❌ Additional dependency required (`tomli`/`tomllib` in Python 3.11+)
+- ❌ Additional dependency required (`tomli`/`tomllib` in Python 3.13+)
 - ❌ Less familiar to most developers
 - ❌ More complex parsing
 

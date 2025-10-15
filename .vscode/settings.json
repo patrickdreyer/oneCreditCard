@@ -1,0 +1,13 @@
+{
+    // Dev Containers Configuration
+    "dev.containers.dockerPath": "podman",
+    "dev.containers.dockerComposePath": "podman-compose",
+    
+    // File associations
+    "files.associations": {
+        "*.md": "markdown"
+    },
+    
+    // Editor settings
+    "editor.formatOnSave": true
+}

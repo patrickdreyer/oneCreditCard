@@ -80,7 +80,7 @@ The system must accept the following input parameters:
 
 ## Dependencies
 
-- Python 3.8+
+- Python 3.13+
 - odfpy library for OpenOffice Calc file generation
 - Standard Python libraries (re, json, datetime, pathlib)
 

@@ -3,8 +3,8 @@
 ## Environment Requirements
 
 ### Python Version
-- **Required**: Python 3.8 or higher
-- **Recommended**: Python 3.11+ for best performance and features
+- **Required**: Python 3.13 or higher
+- **Recommended**: Python 3.13+ for best performance and features
 
 ### Operating System
 - **Cross-Platform**: Ubuntu (Linux), macOS, and Windows
@@ -24,7 +24,7 @@
 **Setup Overview:**
 - **Container Engine**: Podman (instead of Docker)
 - **Development**: VS Code with Dev Containers extension
-- **Base Environment**: Python 3.11 with all project dependencies
+- **Base Environment**: Python 3.13 with all project dependencies
 - **Implementation**: To be set up collaboratively with team member
 
 ## Dependencies
@@ -56,7 +56,11 @@ pip install pytest pytest-cov black flake8 mypy
 ### VS Code Setup
 - **Dev Containers extension**: For container-based development
 - **Python extension**: Language support and debugging
-- Configure formatters and linters in container environment
+- **Podman extension**: Container management integration
+- **GitHub Copilot**: AI assistance (recommended)
+- **Auto-install**: Project includes `.vscode/extensions.json` for automatic extension recommendations
+
+Configure formatters and linters in container environment
 
 ### Git Configuration
 ```bash
