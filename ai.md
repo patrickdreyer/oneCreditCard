@@ -1,48 +1,58 @@
 # AI Context Document - oneCreditCard Project
 
 ## Project Overview
-- **Project Name**: oneCreditCard (repository: oneCreditCart)
-- **Purpose**: PDF credit card expense processing tool for CFO accounting workflows - converts credit card PDFs to OpenOffice Calc spreadsheets
+- **Project Name**: oneCreditCard (repository: oneCreditCard)
+- **Purpose**: Credit card expense processing tool - Viseca text exports → OpenOffice Calc accounting spreadsheets
 - **Owner**: patrickdreyer
 - **Current Branch**: main
+- **Team**: Ubuntu (Patrick) + Mac (Alexandra)
 
-## Technology Stack
-- **Language**: Python 3
-- **Framework**: [To be defined]
-- **Database**: [To be defined]
-- **Testing**: pytest
+## Development Environment Strategy
+- **Container Engine**: Podman (instead of Docker)
+- **Development Platform**: VS Code Dev Containers
+- **Cross-Platform Solution**: Ubuntu + Mac + Windows compatibility via containers
+- **Base Environment**: Python 3.11 with project dependencies
 
-## Dependencies
-- pytest (testing framework)
-- pdfplumber (PDF text extraction)
-- odfpy (OpenOffice Calc file generation)
+## Multi-Platform Collaboration Context
+### Current Development Setup Decision
+- **Decision Made**: Use VS Code Dev Containers with Podman for consistent cross-platform development
+- **Implementation Status**: Documented in doc/development/02-development-setup.md
+- **Next Steps**: Alexandra will implement DevContainer setup with AI assistance
 
-## Coding Standards
-- [To be defined based on language/framework choice]
+### Alexandra DevContainer Implementation Tasks
+When Alexandra collaborates with AI, she will implement:
+1. **Podman Desktop Setup** for Mac
+2. **VS Code Dev Containers Extension** installation
+3. **.devcontainer/devcontainer.json** configuration creation
+4. **Podman integration** with VS Code settings
+5. **Development workflow** testing and validation
 
-## Project Structure
-```
-oneCreditCart/
-├── .git/
-├── .gitignore
-├── REQUIREMENTS.md   # Project requirements and specifications
-├── requirements.txt  # Python dependencies
-├── src/
-│   └── main.py       # Entry point - Hello World console app
-├── tests/
-│   └── test_main.py  # Unit tests for main.py
-└── ai.md             # This context document
-```
+### DevContainer Technical Specifications
+- **Base Image**: python:3.11-slim
+- **Key Dependencies**: odfpy, pytest, black, flake8, mypy
+- **VS Code Configuration**: Python formatter, linter, testing setup
+- **Container Path**: `"dev.containers.dockerPath": "podman"`
+
+## Documentation Status
+### Requirements & Architecture: ✅ Complete
+- Business requirements fully documented in doc/requirements/
+- Technical architecture specified in doc/technical/
+- Test strategy (Honeycomb + Component Focus) implemented
+- Implementation guidelines ready
 
 ## AI Behavior Rules
-1. **Context Loading**: When user writes "load ai.md", read this file to understand project context and rules
-2. **Context Updates**: Proactively propose updates to ai.md when new information or changes are relevant
-3. **No Context Proposals**: Never provide proposed changes for ai.md context itself - update directly
-4. **Code Proposals**: Show diffs/descriptions only, not full code blocks unless explicitly requested
-5. **Confirmation Required**: Any changes within the project must be confirmed by the user before execution
-6. **Short & Concise**: Keep responses brief and to the point. No unnecessary explanations.
-7. **English Only**: All responses and artifacts must be in English, regardless of chat language used
-8. **No Assumptions**: Always ask for approval before:
+1. **Context Loading**: When user writes "load ai.md", read this file AND all documentation in doc/ directory
+1. **Development Context**: Reference complete documentation structure for project details
+1. **Collaboration Support**: Provide hands-on technical assistance for DevContainer setup to Alexandra
+- **Cross-Platform Awareness**: Consider Ubuntu + Mac + Windows compatibility in all recommendations
+1. **Container-First Approach**: Assume Podman + Dev Containers as primary development environment
+1. **Context Updates**: Proactively propose updates to ai.md when new information or changes are relevant
+1. **No Context Proposals**: Never provide proposed changes for ai.md context itself - update directly
+1. **Code Proposals**: Show diffs/descriptions only, not full code blocks unless explicitly requested
+1. **Confirmation Required**: Any changes within the project must be confirmed by the user before execution
+1. **Short & Concise**: Keep responses brief and to the point. No unnecessary explanations.
+1. **English Only**: All responses and artifacts must be in English, regardless of chat language used
+1. **No Assumptions**: Always ask for approval before:
    - Creating new files or directories
    - Modifying existing code
    - Installing dependencies
@@ -52,21 +62,9 @@ oneCreditCart/
 ## Development Guidelines
 - Source code goes in `src/`
 - Tests go in `tests/`
+- Documentation in `doc/` (requirements/ and technical/)
 - Follow user's explicit instructions and preferences
-
-## Session History
-- **2024-09-24 Session 1**: 
-  - Created initial project structure (src/, tests/)
-  - Established confirmation-required workflow
-  - Set up ai.md context document
-  - Added behavior rules for concise responses
-  - Created REQUIREMENTS.md with PDF-to-spreadsheet CFO workflow specs
-
-## Project Goals
-- [To be defined]
-
-## Next Steps
-- [To be updated as project evolves]
+- Reference structured documentation for complete project context
 
 ## Configuration
 - OS: Linux
@@ -74,7 +72,8 @@ oneCreditCart/
 - IDE: VS Code
 
 ## Notes
-- Project appears to be in early setup phase
+- Complete project details are in doc/requirements/ and doc/technical/
+- AI should always reference full documentation context
 - User prefers explicit control over all changes
 
 # Requirement template

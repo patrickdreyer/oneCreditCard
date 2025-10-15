@@ -1,84 +1,102 @@
 # Output Format Specification
 
-## OpenOffice Calc (.ods) Format
+## OpenOffice Calc Accounting Format
 
-### Column Structure
-The output ODS files must follow this exact column structure:
+### Purpose
+Generate standardized accounting journal entries in OpenOffice Calc (.ods) format suitable for CFO bookkeeping workflows. The output format is configurable via configuration file to accommodate different accounting systems.
 
-| Column | German Name | Purpose | Example |
-|--------|-------------|---------|---------|
-| A | Datum | Transaction date | 31.07.25 |
-| B | Beschreibung | Transaction description | Verpflegung |
-| C | KtSoll | Debit account code | 5821 |
-| D | KtHaben | Credit account code | 2110 |
-| E | Betrag CHF | Amount in CHF | 397.75 |
-| F | Saldo | Balance (typically empty) | |
-| G | KS1 | Cost center 1 (typically empty) | |
-| H | KS2 | Cost center 2 (typically empty) | |
-| I | KS3 | Cost center 3 (typically empty) | |
-| J | Bemerkungen | Remarks/Comments | EUR 594.00 |
+### File Structure
+Each monthly statement produces one ODS file containing all transactions for that month, regardless of how many input text files were processed.
 
-### Data Format Requirements
+### Configurable Column Structure
+The output spreadsheet column structure is defined in the configuration file. Core columns use a `type` field, while compatibility columns are defined without a `type`.
 
-#### Date Format
-- **Format**: DD.MM.YY (two-digit year)
-- **Examples**: `31.07.25`, `28.08.25`, `13.09.25`
-- **Source**: Convert from DD.MM.YYYY HH:MM in input text
+**Default configuration for Banana accounting:**
+| Position | Type | Default Name | Purpose | Example Data | Notes |
+|----------|------|--------------|---------|--------------|-------|
+| A | date | Datum | Transaction date | 31.07.25 | Core |
+| B | description | Beschreibung | Expense category | Verpflegung | Core |
+| C | debit_account | KtSoll | Debit account code | 5821 | Core |
+| D | credit_account | KtHaben | Credit account code | 2110 | Core |
+| E | amount_chf | Betrag CHF | Amount in Swiss Francs | 397.75 | Core |
+| F | - | Saldo | Balance (always empty) | | Optional |
+| G | - | KS1 | Cost center 1 (always empty) | | Optional |
+| H | - | KS2 | Cost center 2 (always empty) | | Optional |
+| I | - | KS3 | Cost center 3 (always empty) | | Optional |
+| J | remarks | Bemerkungen | Comments/Notes | EUR 594.00 | Core |
 
-#### Description (Beschreibung)
-- **Content**: Categorized transaction description
-- **Examples**:
-  - `Verpflegung` (Food/Meals)
-  - `SBB` (Swiss Federal Railways)
-  - `Auto; Diesel` (Vehicle; Diesel)
-  - `Gebühren` (Fees)
-  - `SCC; company 2025-07` (Shopping; company with period)
+### Core Columns (With Type)
+These columns have a `type` field and are essential for the tool's functionality:
+- **date**: Transaction date
+- **description**: Categorized transaction description  
+- **debit_account**: Debit account code from account mapping
+- **credit_account**: Credit account code from account mapping
+- **amount_chf**: Transaction amount in CHF
+- **remarks**: Multi-currency information and notes
 
-#### Account Codes (KtSoll/KtHaben)
-Account mapping based on transaction category:
+### Optional Columns (No Type)
+These columns have no `type` field and are added for compatibility or formatting:
+- **name**: Column name only
+- **always_empty**: Can be set to true for empty placeholder columns
+- **Purpose**: Enable exact format matching for target applications
 
-| Category | Description | KtSoll (Debit) | KtHaben (Credit) |
-|----------|-------------|----------------|------------------|
-| Verpflegung | Food & Meals | 5821 | 2110 |
-| SBB | Transport/Railway | 6282 | 2110 |
-| Auto/Diesel | Vehicle/Fuel | 6210 | 2110 |
-| SCC/Shopping | Shopping/Purchases | 4400 | 2110 |
-| Gebühren | Fees | 6940 | 2110 |
+## Data Format Requirements
 
-**Note**: KtHaben (Credit) is consistently 2110 for credit card transactions.
+### Configuration-Based Formatting
+All data formatting rules are defined in the configuration file, including:
+- Column names and positions
+- Date format specifications
+- Data mapping rules
+- Multi-currency handling
 
-#### Amount (Betrag CHF)
-- **Format**: Decimal number with CHF as base currency
-- **Examples**: `397.75`, `29.20`, `90.70`, `2.00`
-- **Source**: Extract from `*XX.XX* CHF` pattern in input text
+### Date Format
+- Configurable format (default: DD.MM.YY two-digit year)
+- Example: Transaction on 31.07.2025 becomes "31.07.25"
+- Format specified in configuration file
 
-#### Multi-Currency Handling
-- **Primary Amount**: Always in CHF in the Betrag CHF column
-- **Original Currency**: Store in Bemerkungen column if different
-- **Format Example**: `EUR 594.00` in Bemerkungen column
-- **Note**: Conversion rates need to be handled externally
+### Transaction Descriptions
+Map transaction categories to accounting descriptions via configuration file:
+- Category recognition patterns
+- Description text mapping
+- Default descriptions for unmapped categories
 
-## Sample Output Rows
+### Account Codes
+Account mapping is defined in the configuration file and maps transaction categories to accounting codes.
 
-### Header Row
+**Configuration Requirements:**
+- Account codes must be configurable via configuration file
+- Each transaction category maps to specific debit and credit accounts
+- Default account codes for unmapped transactions
+- Flexible account code formats (numeric, alphanumeric)
+
+### Amount Handling
+- All amounts in the "Betrag CHF" column must be in Swiss Francs
+- Use decimal format (e.g., 397.75, not 397,75)
+
+### Multi-Currency Transactions
+- **Base Currency**: All amounts in "Betrag CHF" column are in Swiss Francs
+- **Foreign Currency Information**: Original foreign currency amounts stored in "Bemerkungen" column
+- **Format**: "EUR 594.00" (currency code followed by amount)
+- **Processing**: No currency conversion required - CHF amount is always provided in input
+- **Scope**: Limited to CHF as base currency with occasional foreign currency reference information
+
+### Empty Columns for Application Compatibility
+Compatibility columns that remain empty but enable seamless data import:
+- **Saldo (Balance)**: Always empty but enables direct copy&paste into Banana accounting
+- **KS1, KS2, KS3 (Cost Centers)**: Always empty but maintain column structure for target application
+
+**Purpose**: These compatibility columns ensure the exact format expected by specific accounting applications, enabling 1:1 copy&paste operations without manual column adjustments.
+
+## File Naming
+- Use format: YYYY-MM.ods
+- Example: "2025-07.ods" for July 2025 transactions
+- One file per month regardless of number of input files
+
+## Expected Output Sample
 ```
-Datum | Beschreibung | KtSoll | KtHaben | Betrag CHF | Saldo | KS1 | KS2 | KS3 | Bemerkungen
+Datum     | Beschreibung        | KtSoll | KtHaben | Betrag CHF | Saldo | KS1 | KS2 | KS3 | Bemerkungen
+31.07.25  | Verpflegung        | 5821   | 2110    | 397.75     |       |     |     |     |
+31.07.25  | SBB                | 6282   | 2110    | 29.20      |       |     |     |     |
+31.07.25  | Auto; Diesel       | 6210   | 2110    | 90.70      |       |     |     |     |
+31.07.25  | SCC; company 2025-07| 4400   | 2110    | 570.10     |       |     |     |     | EUR 594.00
 ```
-
-### Data Rows Examples
-```
-31.07.25 | Verpflegung | 5821 | 2110 | 397.75 | | | | |
-31.07.25 | SBB | 6282 | 2110 | 29.20 | | | | |
-31.07.25 | Auto; Diesel | 6210 | 2110 | 90.70 | | | | |
-31.07.25 | SCC; company 2025-07 | 4400 | 2110 | 570.10 | | | | | EUR 594.00
-```
-
-## File Naming Convention
-- **Pattern**: `YYYY-MM.ods`
-- **Examples**: `2025-07.ods`, `2025-08.ods`, `2025-09.ods`
-- **Note**: Derived from transaction dates in input files
-
-## Empty Columns
-- **Saldo**: Typically left empty
-- **KS1, KS2, KS3**: Cost center columns, typically left empty
-- **Bemerkungen**: Used only for multi-currency information
