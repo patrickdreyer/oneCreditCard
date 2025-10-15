@@ -5,6 +5,7 @@
 ### Regex Patterns
 
 #### Transaction Block Pattern
+
 ```python
 # Multi-line transaction pattern
 TRANSACTION_PATTERN = re.compile(r'''
@@ -20,6 +21,7 @@ TRANSACTION_PATTERN = re.compile(r'''
 ```
 
 #### Individual Data Patterns
+
 ```python
 # Merchant name extraction
 MERCHANT_PATTERN = re.compile(r'\*([^*]+)\*')
@@ -37,12 +39,14 @@ MULTI_CURRENCY_PATTERN = re.compile(r'\*(\d+\.\d{2})\*\s+CHF\s+(\d+\.\d{2})\s+(E
 ### Parsing Strategy
 
 #### Text Preprocessing
+
 1. **Normalize Whitespace**: Convert multiple spaces to single spaces
 2. **Line Ending Normalization**: Ensure consistent line endings
 3. **Encoding Handling**: Process UTF-8 text from browser exports
 4. **Navigation Removal**: Filter out web page navigation elements
 
 #### Transaction Extraction Process
+
 1. **Category Detection**: Identify transaction category lines
 2. **Block Extraction**: Extract complete transaction blocks
 3. **Field Parsing**: Parse individual fields from blocks
@@ -65,12 +69,14 @@ CATEGORY_PATTERNS = {
 ### Error Handling
 
 #### Common Parsing Issues
+
 - **Incomplete Transactions**: Missing merchant, date, or amount
 - **Format Variations**: Slight changes in web portal output
 - **Multi-line Merchants**: Merchant names spanning multiple lines
 - **Special Characters**: Unicode handling in merchant names
 
 #### Recovery Strategies
+
 - **Partial Data**: Accept transactions with optional missing fields
 - **Fallback Patterns**: Alternative regex patterns for format variations
 - **Manual Review**: Flag unparseable transactions for manual processing
@@ -79,12 +85,14 @@ CATEGORY_PATTERNS = {
 ### Performance Considerations
 
 #### Optimization Techniques
+
 - **Compiled Patterns**: Pre-compile all regex patterns
 - **Chunked Processing**: Process large files in chunks
 - **Memory Management**: Stream processing for large datasets
 - **Caching**: Cache compiled patterns and category mappings
 
 #### Scalability
+
 - **Parallel Processing**: Process multiple files concurrently
 - **Incremental Processing**: Support partial file processing
 - **Progress Tracking**: Provide progress feedback for large operations

@@ -1,17 +1,14 @@
 # oneCreditCard
 
-Credit card expense processing tool for CFO workflows - converts Viseca text exports to accounting spreadsheets.
+A Python tool that processes Viseca credit card text exports and converts them into accounting-ready OpenOffice Calc spreadsheets.
 
-## Overview
-
-**Purpose**: Convert credit card text exports from Viseca web portal to OpenOffice Calc accounting spreadsheets  
-**Target User**: CFO and accounting staff  
-**Input**: Browser-saved text files from Viseca credit card portal  
+**Input**: Unstructured text files exported from Viseca/Migros Cumulus credit card web portal  
 **Output**: Standardized accounting spreadsheets in OpenOffice Calc format  
 
 ## Quick Start
 
 ### Installation
+
 ```bash
 git clone https://github.com/patrickdreyer/oneCreditCard.git
 cd oneCreditCard
@@ -19,49 +16,53 @@ pip install -r requirements.txt
 ```
 
 ### Basic Usage
+
 ```bash
 # Process credit card exports in current directory
 onecreditcard
 
-# Process specific month
-onecreditcard --month 2025-07
+# Specify custom data folder and month
+onecreditcard --data-folder /path/to/exports --month 2025-07
 
-# Use custom configuration
-onecreditcard --config my-config.json
+# Use custom configuration file
+onecreditcard --config custom-config.json
 ```
-
-### Input Parameters
-
-- **Data Folder**: Path to folder with text files and output location (default: current directory)
-- **Month**: Processing month in YYYY-MM format (default: last month)  
-- **Configuration**: Path to account mapping configuration file (default: data folder)
 
 ## Features
 
-- **Automated Processing**: Convert multiple text files per monthly statement
-- **Category Mapping**: Automatically categorize expenses (food, transport, etc.)
-- **Multi-Currency Support**: Handle CHF and EUR transactions
-- **Configurable Output**: Flexible accounting format configuration
-- **Ignore Rules**: Skip payments and unwanted transactions
-- **Error Reporting**: Clear feedback on processing issues
+- **Automated Text Parsing**: Extracts transaction data from unstructured Viseca web portal exports
+- **Account Mapping**: Maps transaction categories to configurable accounting descriptions and codes
+- **Multi-Currency Support**: Handles CHF and foreign currency transactions
+- **Flexible Output**: Configurable OpenOffice Calc format for direct integration with accounting software
+- **Batch Processing**: Process multiple text files representing monthly statements
+- **Data Validation**: Ensures total amounts match between input and output
 
-## Contributing
+## Typical Workflow
 
-1. **Setup Environment**: Follow [development setup guide](doc/development/02-development-setup.md)
-2. **Review Implementation Plan**: Study [implementation guide](doc/development/01-implementation-guide.md)
-3. **Understand Architecture**: Review technical documentation in `doc/technical/`
+1. **Export**: Download monthly statement as text from Viseca web portal (one file per page)
+2. **Configure**: Set up account mapping in JSON configuration file
+3. **Process**: Run onecreditcard to parse and convert data
+4. **Import**: Load generated ODS file into accounting software (e.g., Banana Accounting)
+
+## Getting Started
+
+1. **Read Documentation**: Start with [project overview](doc/requirements/01-project-overview.md)
+2. **Review Sample Data**: Check examples in `tests/fixtures/inputs/`
+3. **Understand Format**: Study [input](doc/requirements/02-input-format.md) and [output](doc/requirements/03-output-format.md) formats
 4. **Examine Test Data**: Analyze samples in `tests/fixtures/inputs/`
 5. **Begin Implementation**: Start with Phase 1 priorities (Core Parser → Account Mapping → ODS Generation)
 
 ## Documentation Structure
 
 📁 **[doc/requirements/](doc/requirements/README.md)** - Business requirements and user needs
+
 - **[Project Overview](doc/requirements/01-project-overview.md)** - Project goals and user requirements
 - **[Input Format](doc/requirements/02-input-format.md)** - Input data format from user perspective  
 - **[Output Format](doc/requirements/03-output-format.md)** - Required accounting output format
 - **[Formal Requirements](doc/requirements/04-formal-requirements.md)** - Formal functional and non-functional requirements
 
 📁 **[doc/technical/](doc/technical/README.md)** - Technical implementation details
+
 - **[System Architecture](doc/technical/01-architecture.md)** - System architecture and design
 - **[Account Mapping](doc/technical/02-account-mapping.md)** - Transaction mapping and configuration
 - **[Parsing Implementation](doc/technical/03-parsing-implementation.md)** - Text parsing technical details
@@ -70,6 +71,7 @@ onecreditcard --config my-config.json
 - **[Test Strategy](doc/technical/06-test-strategy.md)** - Honeycomb + Component testing approach
 
 📁 **[doc/development/](doc/development/README.md)** - Development guidance and setup
+
 - **[Implementation Guide](doc/development/01-implementation-guide.md)** - Development priorities and phases
 - **[Development Setup](doc/development/02-development-setup.md)** - Environment setup and tools
 - **[Performance Guidelines](doc/development/03-performance-guidelines.md)** - Performance considerations
@@ -77,6 +79,7 @@ onecreditcard --config my-config.json
 ## AI Collaboration
 
 📄 **[ai.md](ai.md)** - AI Context Document for team collaboration
+
 - **Purpose**: Provides complete project context for AI-assisted development sessions
 - **Usage**: Team members can run "load ai.md" to give AI full project understanding
 - **Content**: Project overview, development environment strategy, multi-platform setup, collaboration guidelines
@@ -86,7 +89,4 @@ onecreditcard --config my-config.json
 
 [License information to be added]
 
-## Contact
-
-**Repository**: [oneCreditCard](https://github.com/patrickdreyer/oneCreditCard)  
 **Owner**: patrickdreyer

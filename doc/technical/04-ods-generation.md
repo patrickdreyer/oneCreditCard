@@ -5,6 +5,7 @@
 ### Configurable ODS Structure
 
 #### Dynamic Column Creation
+
 The ODS file structure is defined by configuration file rather than hardcoded:
 
 ```python
@@ -27,6 +28,7 @@ def create_ods_from_config(transactions, config):
 ```
 
 #### Configuration-Based Data Mapping
+
 ```python
 def map_transaction_to_row(transaction, columns, account_mapping):
     """Map transaction data to ODS row based on configuration"""
@@ -73,6 +75,7 @@ def get_column_value(transaction, column_config, account_mapping):
 ### Data Transformation
 
 #### Transaction to Row Conversion
+
 ```python
 def transaction_to_row(transaction):
     """Convert transaction object to ODS table row"""
@@ -104,6 +107,7 @@ def transaction_to_row(transaction):
 ### Account Code Mapping
 
 #### Configuration-Based Mapping
+
 Account mapping is loaded from configuration file at runtime:
 
 ```python
@@ -124,6 +128,7 @@ debit_account, credit_account = get_account_codes('essen_trinken', account_mappi
 ```
 
 #### Configuration File Structure
+
 ```json
 {
   "output_format": {
@@ -152,10 +157,12 @@ debit_account, credit_account = get_account_codes('essen_trinken', account_mappi
 ```
 
 **Column Types:**
+
 - **Core columns**: Have both `name` and `type` fields
 - **Optional columns**: Have only `name` field, no `type`
 
 ### Configuration Rules
+
 - **Core Columns**: Have `type` field, contain transaction data
 - **Optional Columns**: No `type` field, used for compatibility/formatting
 - **always_empty**: Optional columns that remain empty but maintain structure
@@ -163,6 +170,7 @@ debit_account, credit_account = get_account_codes('essen_trinken', account_mappi
 ### Multi-Currency Handling
 
 #### Currency Conversion Strategy
+
 ```python
 def handle_multi_currency(transaction):
     """Handle multi-currency transactions"""
@@ -181,6 +189,7 @@ def handle_multi_currency(transaction):
 ### File Operations
 
 #### File Creation and Saving
+
 ```python
 def create_ods_file(transactions, output_path):
     """Create ODS file from transaction list"""
@@ -200,6 +209,7 @@ def create_ods_file(transactions, output_path):
 ```
 
 #### File Naming Convention
+
 ```python
 def generate_filename(transactions):
     """Generate filename from transaction dates"""
@@ -211,12 +221,14 @@ def generate_filename(transactions):
 ### Data Validation
 
 #### Pre-Generation Validation
+
 - **Required Fields**: Ensure date, amount, and category are present
 - **Data Types**: Validate numeric amounts and date formats
 - **Account Mapping**: Verify all categories have corresponding account codes
 - **Currency Consistency**: Check currency handling for multi-currency transactions
 
 #### Post-Generation Validation
+
 - **File Integrity**: Verify ODS file can be opened
 - **Data Accuracy**: Spot-check generated data against source
 - **Format Compliance**: Ensure column structure matches requirements
@@ -224,6 +236,7 @@ def generate_filename(transactions):
 ### Error Handling
 
 #### Generation Errors
+
 - **Missing Data**: Handle transactions with incomplete information
 - **Invalid Amounts**: Process malformed currency amounts
 - **File Write Errors**: Handle disk space and permission issues
@@ -232,11 +245,13 @@ def generate_filename(transactions):
 ### Performance Optimization
 
 #### Memory Management
+
 - **Streaming**: Process large transaction sets incrementally
 - **Batch Processing**: Group transactions for efficient processing
 - **Resource Cleanup**: Proper disposal of ODS document objects
 
 #### Output Optimization
+
 - **File Size**: Minimize generated file size
 - **Compression**: Leverage ODS compression features
 - **Formatting**: Optimize cell formatting for performance

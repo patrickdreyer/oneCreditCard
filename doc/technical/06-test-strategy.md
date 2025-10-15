@@ -7,7 +7,8 @@ This document outlines the test strategy for the oneCreditCard project, emphasiz
 ## Strategy Overview
 
 ### Test Distribution Model
-```
+
+```text
          E2E (CLI workflows) - 5%
     🍯 Integration (Pipeline Tests) 🍯 - 60%  ← Hauptfokus
        Component (Parser/Mapper/ODS) - 25%
@@ -21,7 +22,8 @@ This document outlines the test strategy for the oneCreditCard project, emphasiz
 
 ### 1. Integration Tests (60% - Primary Focus)
 
-**Pipeline Integration Tests**
+#### Pipeline Integration Tests
+
 ```python
 def test_text_to_ods_complete_pipeline():
     """Test: Raw Viseca text → parsed transactions → mapped accounts → ODS file"""
@@ -44,7 +46,8 @@ def test_ignore_rules_integration():
     """Test: Ignore rules applied across complete workflow"""
 ```
 
-**Data Flow Integration Tests**
+#### Data Flow Integration Tests
+
 ```python
 def test_amount_preservation_across_pipeline():
     """Verify: Sum of input amounts = Sum of output amounts"""
@@ -58,7 +61,8 @@ def test_error_propagation_integration():
 
 ### 2. Component Tests (25%)
 
-**Isolated Component Testing**
+#### Isolated Component Testing
+
 ```python
 def test_parser_component_isolation():
     """Test parser with mocked file system and known input patterns"""
@@ -70,7 +74,8 @@ def test_ods_generator_component_isolation():
     """Test ODS generation with controlled transaction data"""
 ```
 
-**Component Contract Testing**
+#### Component Contract Testing
+
 ```python
 def test_parser_output_contract():
     """Ensure parser always returns valid Transaction objects"""
@@ -84,7 +89,8 @@ def test_ods_generator_input_contract():
 
 ### 3. Unit Tests (10% - Minimal but Focused)
 
-**Critical Algorithm Testing**
+#### Critical Algorithm Testing
+
 ```python
 def test_amount_extraction_regex():
     """Test complex regex patterns for amount extraction"""
@@ -96,7 +102,8 @@ def test_category_matching_algorithms():
     """Test flexible category matching logic"""
 ```
 
-**Utility Function Testing**
+#### Utility Function Testing
+
 ```python
 def test_file_pattern_recognition():
     """Test month-based file pattern matching"""
@@ -107,7 +114,8 @@ def test_data_validation_utilities():
 
 ### 4. End-to-End Tests (5% - Critical Workflows Only)
 
-**Complete CLI Workflows**
+#### Complete CLI Workflows
+
 ```python
 def test_complete_cli_default_parameters():
     """Test: python main.py (with defaults)"""
@@ -122,16 +130,19 @@ def test_complete_cli_error_scenarios():
 ## Test Implementation Strategy
 
 ### Phase 1: Foundation Tests
+
 1. **Component Contracts**: Define and test interfaces between components
 2. **Core Integration**: Basic pipeline functionality
 3. **Critical Units**: Amount extraction and validation
 
 ### Phase 2: Pipeline Tests
+
 1. **Multi-file Integration**: Batch processing workflows
 2. **Configuration Integration**: Various config scenarios
 3. **Error Handling Integration**: Graceful failure across components
 
 ### Phase 3: Production Readiness
+
 1. **E2E CLI Testing**: Complete user workflows
 2. **Performance Integration**: Large dataset processing
 3. **Regression Testing**: Maintain existing functionality
@@ -139,6 +150,7 @@ def test_complete_cli_error_scenarios():
 ## Testing Tools and Setup
 
 ### Primary Testing Stack
+
 ```python
 # pytest.ini
 [tool:pytest]
@@ -163,6 +175,7 @@ For complete project structure including test organization, see:
 **[Code Organization](07-code-organization.md)** - Project structure and file organization
 
 **Test Directory Structure:**
+
 - **tests/unit/**: Unit test files
 - **tests/component/**: Component test files  
 - **tests/integration/**: Integration test files
@@ -170,6 +183,7 @@ For complete project structure including test organization, see:
 - **tests/fixtures/**: Test data and configuration files
 
 ### Test Execution Strategy
+
 ```bash
 # Development workflow
 pytest tests/unit tests/component -x     # Fast feedback loop
@@ -184,16 +198,19 @@ pytest tests/performance                # Performance regression
 ## Quality Gates
 
 ### Component Quality Gates
+
 - **Parser**: Must handle all test data files without crashes
 - **Mapper**: Must correctly map all known categories
 - **ODS Generator**: Must produce valid OpenOffice files
 
-### Integration Quality Gates  
+### Integration Quality Gates
+
 - **Amount Integrity**: Input totals must equal output totals (±0.01 CHF)
 - **Data Completeness**: All transactions must be processed (mapped or unmapped)
 - **Configuration Flexibility**: Must handle various config scenarios
 
 ### Performance Quality Gates
+
 - **Processing Speed**: <5 seconds for typical monthly data (NFR-01)
 - **Memory Usage**: <100MB for standard datasets
 - **File Size**: Output files <10MB for typical monthly data
@@ -201,12 +218,14 @@ pytest tests/performance                # Performance regression
 ## Test Maintenance
 
 ### Continuous Improvement
+
 - **Regular review** of test effectiveness and coverage
 - **Addition of new test cases** based on production issues
 - **Refactoring of test code** to maintain clarity and speed
 - **Update of test data** to reflect Viseca format changes
 
 ### Test Data Management
+
 - **Anonymized real data** for realistic testing scenarios
 - **Synthetic edge cases** for boundary condition testing
 - **Version control** of test expectations and golden masters

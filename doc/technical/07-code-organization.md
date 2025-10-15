@@ -2,7 +2,7 @@
 
 ## Project Structure
 
-```
+```text
 oneCreditCard/
 ├── .git/
 ├── .gitignore
@@ -47,6 +47,7 @@ oneCreditCard/
 ## Module Responsibilities
 
 ### Parser Module (`src/parser/`)
+
 - **textParser.py**: Main parsing logic
   - File reading and preprocessing
   - Regex pattern matching
@@ -59,6 +60,7 @@ oneCreditCard/
   - Serialization/deserialization
 
 ### Mapping Module (`src/mapping/`)
+
 - **accountMapper.py**: Category mapping logic
   - Category matching (flexible)
   - Account code assignment
@@ -71,6 +73,7 @@ oneCreditCard/
   - Default value handling
 
 ### Output Module (`src/output/`)
+
 - **odsGenerator.py**: ODS file generation
   - Spreadsheet creation using odfpy
   - Column configuration handling
@@ -78,6 +81,7 @@ oneCreditCard/
   - File output management
 
 ### CLI Module (`src/cli/`)
+
 - **main.py**: Command-line interface
   - Argument parsing
   - Workflow orchestration
@@ -87,23 +91,27 @@ oneCreditCard/
 ## Key Design Principles
 
 ### Separation of Concerns
+
 - Each module has a single, well-defined responsibility
 - Minimal coupling between modules
 - Clear interfaces and contracts
 
 ### Configuration-Driven
+
 - Parsing patterns externalized where possible
 - Account mapping fully configurable
 - Output format customizable
 - Easy to extend without code changes
 
 ### Error Resilience
+
 - Graceful handling of malformed input
 - Clear error messages with context
 - Partial processing when possible
 - Comprehensive logging
 
 ### Testability
+
 - Small, focused functions
 - Dependency injection for external resources
 - Mock-friendly interfaces
@@ -112,18 +120,21 @@ oneCreditCard/
 ## Development Guidelines
 
 ### Code Style
+
 - Follow PEP 8 style guidelines
 - Use type hints where beneficial
 - Comprehensive docstrings
 - Meaningful variable and function names
 
 ### Documentation
+
 - Module-level docstrings explaining purpose
 - Function docstrings with parameters and return values
 - Inline comments for complex logic
 - README files for major components
 
 ### Testing Strategy
+
 - Unit tests for individual functions
 - Integration tests for module interactions
 - End-to-end tests for complete workflows

@@ -5,6 +5,7 @@
 This guide outlines the recommended implementation sequence for the oneCreditCard project.
 
 ### Phase 1: Core Components (with Integration Focus)
+
 1. **Core Parser** - Basic regex-based transaction extraction
    - Text file reading and preprocessing
    - Transaction pattern recognition
@@ -30,21 +31,22 @@ This guide outlines the recommended implementation sequence for the oneCreditCar
    - **Integration tests** for data → ODS pipeline
 
 ### Phase 2: Advanced Features (with Integration Testing)
-4. **Multi-File Support** - Batch processing for monthly statements
+
+1. **Multi-File Support** - Batch processing for monthly statements
    - File pattern recognition
    - Multi-file aggregation
    - Duplicate detection
    - Monthly consolidation
    - **Integration tests** with multiple test files
 
-5. **Error Handling** - Robust error reporting and logging
+1. **Error Handling** - Robust error reporting and logging
    - Graceful failure handling
    - User-friendly error messages
    - Processing validation
    - Data integrity checks
    - **Integration tests** for error propagation
 
-6. **CLI Interface** - User-friendly command-line interface
+1. **CLI Interface** - User-friendly command-line interface
    - Parameter parsing
    - Default value handling
    - Help system
@@ -52,13 +54,14 @@ This guide outlines the recommended implementation sequence for the oneCreditCar
    - **E2E tests** for complete CLI workflows
 
 ### Phase 3: Polish & Optimization
-7. **End-to-End Testing** - Comprehensive workflow validation
+
+1. **End-to-End Testing** - Comprehensive workflow validation
    - Complete workflow testing with real data scenarios
    - Performance benchmarks
    - Edge case validation
    - Regression test suite
 
-8. **Documentation** - User and developer documentation
+1. **Documentation** - User and developer documentation
    - Installation guide
    - Usage examples
    - Configuration documentation
@@ -67,25 +70,30 @@ This guide outlines the recommended implementation sequence for the oneCreditCar
 ## Implementation Strategy
 
 ### Test Strategy: Honeycomb + Component Focus
+
 **Quick Overview:**
+
 - **Integration Focus (60%)**: Data pipeline testing is primary concern
 - **Component Testing (25%)**: Isolated testing of Parser, Mapper, ODS Generator
 - **Minimal Unit Testing (10%)**: Only for complex algorithms (regex, parsing)
 - **Critical E2E Testing (5%)**: Complete CLI workflows with real data
 
 ### Test-Driven Development Approach
+
 - **Write tests first**: Define expected behavior before implementation
 - **Red-Green-Refactor**: Write failing test → implement feature → refactor code
 - **Continuous testing**: Run tests after every change
 - **Test coverage**: Aim for >90% code coverage from Phase 1
 
 ### Iterative Development
+
 - Start with minimum viable implementation
 - Add features incrementally  
 - Test thoroughly at each stage
 - Validate with real data early
 
 ### Key Success Factors
+
 - **Robust parsing**: Handle format variations gracefully
 - **Flexible configuration**: Easy to extend and modify
 - **Clear error messages**: Help users resolve issues quickly
@@ -95,6 +103,7 @@ This guide outlines the recommended implementation sequence for the oneCreditCar
 ## Technology Decisions
 
 ### Core Libraries
+
 - **Text Processing**: Python `re` module for regex operations
 - **ODS Generation**: `odfpy` library for OpenOffice file creation
 - **Date Handling**: `datetime` module for date parsing and formatting
@@ -102,6 +111,7 @@ This guide outlines the recommended implementation sequence for the oneCreditCar
 - **Configuration**: JSON with built-in `json` module
 
 ### Testing Framework
+
 - **pytest**: Primary testing framework
 - **Test Data**: Anonymized real-world samples
 - **Coverage**: Aim for >90% code coverage with focus on integration testing
@@ -109,12 +119,14 @@ This guide outlines the recommended implementation sequence for the oneCreditCar
 ## Risk Mitigation
 
 ### High-Risk Areas
+
 1. **Regex Complexity**: Start simple, refine iteratively
 2. **Format Changes**: Make patterns configurable
 3. **Category Recognition**: Provide manual override mechanisms
 4. **Data Validation**: Implement comprehensive checks
 
 ### Development Best Practices
+
 - Version control with meaningful commits
 - Code review for critical components
 - **Test-first development**: Write tests before implementation
