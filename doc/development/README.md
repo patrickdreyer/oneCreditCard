@@ -1,26 +1,13 @@
 # Development Overview
 
-This directory contains all development-related documentation for the oneCreditCard project.
+Development guidance for the oneCreditCard project.
 
-## Current Status
+## Status
 
-**Project Phase**: Requirements & Architecture Complete ✅
+**Ready to implement** - Requirements and architecture complete
 
-**Completed:**
+## Documents
 
-- All business requirements documented
-- Technical architecture specified
-- Test strategy (Honeycomb + Component Focus) implemented
-- Implementation guidelines ready
-
-**Next Steps:**
-
-- Development priorities established
-- DevContainer environment setup for cross-platform development
-- Ready for implementation start
-
-## Getting Started
-
-1. **Environment Setup**: Follow [development setup guide](02-development-setup.md)
-2. **Review Priorities**: Study [implementation guide](01-implementation-guide.md)
-3. **Begin Implementation**: Follow [implementation guide](01-implementation-guide.md)
+- **[Implementation Guide](01-implementation-guide.md)** - Development phases and testing strategy  
+- **[Parsing Implementation](02-parsing-implementation.md)** - Text parsing patterns and regex implementation
+- **[ODS Generation](03-ods-generation.md)** - OpenOffice Calc file generation technical details

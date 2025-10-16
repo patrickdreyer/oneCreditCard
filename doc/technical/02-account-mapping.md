@@ -1,35 +1,23 @@
-# Account Mapping Configuration
+# Account Mapping
 
-## Transaction Grouping and Mapping Rules
+## Purpose
 
-The system groups transactions by category and maps them to accounting descriptions and account codes. This mapping is configured in the JSON configuration file.
+Map Viseca categories to accounting descriptions and account codes via JSON configuration.
 
-## Transaction Categories from Viseca Exports
+## Category Mapping
 
-### Category-Based Mapping
+| Viseca Category | Description | Account |
+|-----------------|-------------|---------|
+| Essen & Trinken | Verpflegung | 5821 |
+| Fahrzeug | Auto; Diesel | 6210 |
+| Shopping | Shopping | 5800 |
 
-Based on the "category" field in Viseca text exports:
+## Column Configuration Rules
 
-| Viseca Category | Accounting Description | Notes |
-|-----------------|----------------------|-------|
-| Essen & Trinken | Verpflegung | Food and beverages |
-| Fahrzeug | Auto; Diesel | Vehicle/fuel expenses |
-| Shopping | Shopping | General retail purchases |
-| Allgemeines | Allgemeines | General expenses |
-| Einlagen | Zahlung | Payments (negative amounts) |
-| Reisen | Reisen | Travel expenses |
+- **Core Columns**: Have `type` field, contain actual transaction data
+- **Optional Columns**: No `type` field, used for formatting/compatibility (remain empty)
 
-### Merchant-Based Mapping
-
-Some transactions require merchant-based categorization:
-
-| Merchant Pattern | Accounting Description | Category Override |
-|------------------|----------------------|------------------|
-| SBB CFF FFS | SBB | Transport (regardless of Viseca category) |
-
-## Configuration Structure
-
-### Account Mapping Section
+**Configuration Example:**
 
 ```json
 {
@@ -42,22 +30,6 @@ Some transactions require merchant-based categorization:
     "Essen & Trinken": {
       "description": "Verpflegung",
       "debitAccount": "5821"
-    },
-    "Fahrzeug": {
-      "description": "Auto; Diesel",
-      "debitAccount": "6210"
-    },
-    "Shopping": {
-      "description": "Shopping", 
-      "debitAccount": "5800"
-    },
-    "Allgemeines": {
-      "description": "Allgemeines",
-      "debitAccount": "5900"
-    },
-    "Reisen": {
-      "description": "Reisen",
-      "debitAccount": "6300"
     }
   },
   "columns": [
@@ -75,34 +47,12 @@ Some transactions require merchant-based categorization:
 }
 ```
 
-## Processing Logic
+## Processing Rules
 
-### Transaction Processing Priority
-
-1. **Ignore Check**: First check if transaction should be ignored
-   - Check if category matches any entry in `ignore.categories`
-   - Check if transaction name matches any entry in `ignore.transactions`
-   - If matched, skip transaction completely
-2. **Category Mapping**: Check if category matches any entry in the `mapping` section
-3. **Transaction Override**: Special handling for specific transactions (e.g., SBB CFF FFS)
-4. **Unmapped Transactions**: Transactions without matching category are processed individually
-
-### Ignore Configuration
-
-Transactions can be excluded from processing entirely:
-
-**Category-based Ignoring:**
-
-- **Purpose**: Ignore entire transaction categories (e.g., payments, refunds)
-- **Example**: `"categories": ["Einlagen"]` - ignores all "Einlagen" transactions
-- **Matching**: Uses same flexible matching as category mapping (case-insensitive, whitespace-flexible)
-
-**Transaction-based Ignoring:**
-
-- **Purpose**: Ignore specific transactions regardless of category
-- **Example**: `"transactions": ["Ihre Zahlung - Danke"]` - ignores this specific payment
-- **Matching**: Exact transaction name matching with flexible whitespace/case handling
-- **Use Case**: Filter out specific payment confirmations, refunds, or corrections
+1. **Ignore**: Skip categories/transactions in ignore section
+2. **Map**: Apply category mapping to account codes
+3. **Group**: Sum transactions by final description
+4. **Unmapped**: Process individually with empty debit account
 
 ### Ignore vs. Mapping Priority
 
@@ -169,12 +119,6 @@ The system performs case-insensitive and whitespace-flexible matching:
 - Configuration keys are exact category names (e.g., "Essen & Trinken")
 - Matching normalizes both input and config key for comparison only
 - Original configuration structure preserved
-
-Examples:
-
-- "ESSEN     & trinken" → matches config key "Essen & Trinken"
-- "SBB CFF FFS" → matches config key "SBB CFF FFS"
-- "fahrzeug" → matches config key "Fahrzeug"
 
 ### Account Code Format
 

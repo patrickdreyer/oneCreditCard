@@ -4,6 +4,11 @@
 
 ### Regex Patterns
 
+- **Regex Patterns**: Use compiled regex for performance
+- **Multi-line Matching**: Handle transactions spanning multiple lines
+- **Error Tolerance**: Graceful handling of parsing failures
+- **Data Validation**: Verify extracted data completeness and format
+
 #### Transaction Block Pattern
 
 ```python

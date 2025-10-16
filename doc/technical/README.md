@@ -1,19 +1,17 @@
 # Technical Documentation
 
-This directory contains technical implementation details for the oneCreditCard project.
+Implementation details for the oneCreditCard tool.
 
-## Document Overview
+## Environment
 
-- **[System Architecture](01-architecture.md)** - System architecture and component design
-- **[Account Mapping](02-account-mapping.md)** - Transaction grouping and account mapping configuration
-- **[Parsing Implementation](03-parsing-implementation.md)** - Text parsing patterns and regex implementation
-- **[ODS Generation](04-ods-generation.md)** - OpenOffice Calc file generation technical details
-- **[Configuration Format](05-configuration-format.md)** - Configuration format comparison and decision
-- **[Test Strategy](06-test-strategy.md)** - Honeycomb + Component testing approach and implementation
-- **[Code Organization](07-code-organization.md)** - Project structure, modules, and file organization
+- **DevContainer**: Python 3.13 with VS Code and Podman
+- **Testing**: pytest with focus on integration testing
+- **Libraries**: odfpy (ODS generation), standard Python modules
 
-## Quick Reference
+## Documents
 
-**Technology Stack**: Python 3, regex, odfpy  
-**Development Approach**: CLI-based processing with regex pattern matching  
-**Testing Strategy**: Honeycomb model focusing on integration and component testing
+- **[Architecture](01-architecture.md)** - System overview and CLI parameters
+- **[Account Mapping](02-account-mapping.md)** - Category to account code mapping
+- **[Configuration Format](03-configuration-format.md)** - Configuration format comparison and decision
+- **[Test Strategy](04-test-strategy.md)** - Honeycomb + Component testing approach and implementation
+- **[Code Organization](05-code-organization.md)** - Project structure, modules, and file organization

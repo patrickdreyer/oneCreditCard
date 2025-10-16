@@ -1,30 +1,27 @@
-# Output Format Specification
+# Output Format
 
-This document specifies the required accounting output format for the oneCreditCard tool.
+## Target
 
-## Purpose
+OpenOffice Calc (.ods) files for accounting software import.
 
-Generate OpenOffice Calc (.ods) files in a standardized accounting format suitable for direct import into accounting software (e.g., Banana Accounting).
+## Column Structure
 
-## File Structure
+The output format supports configurable columns with both required typed columns and optional named-only columns.
 
-- **Format**: OpenOffice Calc (.ods)
-- **Structure**: Single worksheet with tabular data
-- **Naming**: Configurable (default: based on processing month)
+Example for Banana:
 
-## Configurable Column Structure
-
-The output format supports configurable columns with both required typed columns and optional named-only columns:
-
-| Position | Type | Default Name | Purpose | Example Data | Notes |
+| Position | Type | Example Name | Purpose | Example Data | Notes |
 |----------|------|--------------|---------|--------------|-------|
 | 1 | date | Datum | Transaction date | 15.07.25 | DD.MM.YY format |
 | 2 | description | Beschreibung | Accounting description | "Verpflegung" | From category mapping |
 | 3 | debitAccount | KtSoll | Debit account code | "5821" | From mapping config |
 | 4 | creditAccount | KtHaben | Credit account code | "2110" | From mapping config |
 | 5 | amountChf | Betrag CHF | Amount in CHF | 25.50 | Always CHF |
-| 6 | - | Saldo | Balance (empty) | - | For compatibility |
-| 7 | - | Bemerkung | Remarks/Notes | "EUR 23.45" | Foreign currency info |
+| 6 | - | Saldo | Balance | (empty) | For easy copy&paste |
+| 7 | - | KS1 | Cost center 1 | (empty) | For easy copy&paste |
+| 8 | - | KS2 | Cost center 2 | (empty) | For easy copy&paste |
+| 9 | - | KS3 | Cost center 3 | (empty) | For easy copy&paste |
+| 10 | - | Bemerkung | Remarks/Notes | "EUR 23.45" | Foreign currency info |
 
 ## Core Columns (With Type)
 
@@ -38,7 +35,7 @@ The output format supports configurable columns with both required typed columns
 
 - **name**: Column name only
 - **purpose**: Display purposes, balance column, remarks, etc.
-- **content**: May be empty or contain supplementary information
+- **content**: Empty by default but may contain supplementary information
 
 ## Configuration-Based Formatting
 
@@ -64,9 +61,8 @@ The system must support configuration of:
 
 ## Account Codes
 
-**Structure**: 4-digit accounting codes as strings
-**Examples**: "5821" (expense account), "2110" (credit card liability account)
-
+- **Structure**: 4-digit accounting codes as strings
+- **Examples**: "5821" (expense account), "2110" (credit card liability account)
 - **Debit Account**: Expense category (varies by transaction type)
 - **Credit Account**: Typically credit card liability account (often same for all)
 - Account codes must be configurable via configuration file
@@ -77,20 +73,9 @@ The system must support configuration of:
 - Positive values represent expenses (typical for credit card transactions)
 - Format: Decimal with 2 places (25.50, 125.00, 15.75)
 
-## Multi-Currency Transactions
+## Multi-Currency
 
 - **Base Currency**: All amounts in "Betrag CHF" column are in Swiss Francs
 - **Foreign Currency Preservation**: Original foreign currency amounts preserved in "Bemerkung" (Remarks) column
 - **Format**: "EUR 23.45", "USD 27.80", etc.
 - **Exchange Rate**: Not required in output (CHF amount is final)
-
-## Empty Columns for Application Compatibility
-
-- **Saldo (Balance)**: Always empty but enables direct copy&paste into Banana accounting
-- **Additional**: Other empty columns may be added for specific accounting software compatibility
-
-**Example Row:**
-
-| Datum | Beschreibung | KtSoll | KtHaben | Betrag CHF | Saldo | Bemerkung |
-|-------|--------------|--------|---------|------------|-------|-----------|
-| 15.07.25 | Verpflegung | 5821 | 2110 | 25.50 | | EUR 23.45 |

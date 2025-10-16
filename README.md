@@ -19,14 +19,28 @@ pip install -r requirements.txt
 
 ```bash
 # Process credit card exports in current directory
-onecreditcard
+python src/main.py
 
 # Specify custom data folder and month
-onecreditcard --data-folder /path/to/exports --month 2025-07
+python src/main.py --data-folder /path/to/exports --month 2025-07
 
 # Use custom configuration file
-onecreditcard --config custom-config.json
+python src/main.py --config custom-config.json
 ```
+
+### Parameters
+
+- **--folder, -f**: Data folder path (default: current working directory)
+  - Contains input text files
+  - Output ODS file will be created here
+- **--month, -m**: Processing month in YYYY-MM format (default: previous month)
+  - Filters transactions to specified month only
+  - Used for output filename generation
+- **--config, -c**: Configuration file path (default: {data_folder}/onecreditcard.json)
+  - Contains account mapping rules and transaction categorization
+  - Defines output format: column names, positions, and data formats
+  - Processing settings and preferences
+  - JSON format (see [Configuration Format](doc/technical/03-configuration-format.md))
 
 ## Features
 
@@ -41,40 +55,29 @@ onecreditcard --config custom-config.json
 
 1. **Export**: Download monthly statement as text from Viseca web portal (one file per page)
 2. **Configure**: Set up account mapping in JSON configuration file
-3. **Process**: Run onecreditcard to parse and convert data
+3. **Process**: Run python src/main.py to parse and convert data
 4. **Import**: Load generated ODS file into accounting software (e.g., Banana Accounting)
-
-## Getting Started
-
-1. **Read Documentation**: Start with [project overview](doc/requirements/01-project-overview.md)
-2. **Review Sample Data**: Check examples in `tests/fixtures/inputs/`
-3. **Understand Format**: Study [input](doc/requirements/02-input-format.md) and [output](doc/requirements/03-output-format.md) formats
-4. **Examine Test Data**: Analyze samples in `tests/fixtures/inputs/`
-5. **Begin Implementation**: Start with Phase 1 priorities (Core Parser → Account Mapping → ODS Generation)
 
 ## Documentation Structure
 
-📁 **[doc/requirements/](doc/requirements/README.md)** - Business requirements and user needs
+📁 **[doc/requirements/](doc/requirements/README.md)** - Business requirements
 
-- **[Project Overview](doc/requirements/01-project-overview.md)** - Project goals and user requirements
-- **[Input Format](doc/requirements/02-input-format.md)** - Input data format from user perspective  
-- **[Output Format](doc/requirements/03-output-format.md)** - Required accounting output format
-- **[Formal Requirements](doc/requirements/04-formal-requirements.md)** - Formal functional and non-functional requirements
+- **[Input Format](doc/requirements/01-input-format.md)** - Viseca text export structure  
+- **[Output Format](doc/requirements/02-output-format.md)** - Accounting ODS requirements
 
-📁 **[doc/technical/](doc/technical/README.md)** - Technical implementation details
+📁 **[doc/technical/](doc/technical/README.md)** - Technical implementation
 
-- **[System Architecture](doc/technical/01-architecture.md)** - System architecture and design
-- **[Account Mapping](doc/technical/02-account-mapping.md)** - Transaction mapping and configuration
-- **[Parsing Implementation](doc/technical/03-parsing-implementation.md)** - Text parsing technical details
-- **[ODS Generation](doc/technical/04-ods-generation.md)** - Spreadsheet generation implementation
-- **[Configuration Format](doc/technical/05-configuration-format.md)** - Configuration format comparison
-- **[Test Strategy](doc/technical/06-test-strategy.md)** - Honeycomb + Component testing approach
+- **[Architecture](doc/technical/01-architecture.md)** - System overview and CLI parameters
+- **[Account Mapping](doc/technical/02-account-mapping.md)** - Category to account code mapping
+- **[Configuration Format](doc/technical/03-configuration-format.md)** - Configuration format comparison and decision
+- **[Test Strategy](doc/technical/04-test-strategy.md)** - Honeycomb + Component testing approach and implementation
+- **[Code Organization](doc/technical/05-code-organization.md)** - Project structure, modules, and file organization
 
-📁 **[doc/development/](doc/development/README.md)** - Development guidance and setup
+📁 **[doc/development/](doc/development/README.md)** - Development guidance
 
-- **[Implementation Guide](doc/development/01-implementation-guide.md)** - Development priorities and phases
-- **[Development Setup](doc/development/02-development-setup.md)** - Environment setup and tools
-- **[Performance Guidelines](doc/development/03-performance-guidelines.md)** - Performance considerations
+- **[Implementation Guide](doc/development/01-implementation-guide.md)** - Development phases and testing strategy
+- **[Parsing Implementation](doc/development/02-parsing-implementation.md)** - Text parsing patterns and regex implementation
+- **[ODS Generation](doc/development/03-ods-generation.md)** - OpenOffice Calc file generation technical details
 
 ## AI Collaboration
 
