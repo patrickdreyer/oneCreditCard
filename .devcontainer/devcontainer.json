@@ -1,7 +1,16 @@
 {
     "name": "oneCreditCard Python Development",
     "image": "docker.io/library/python:3.13-bookworm",
-    "runArgs": ["--name", "onecreditcard-dev"],
+    "runArgs": [
+        "--name", "onecreditcard-dev",
+        "--cpus", "0",
+        "--cpu-shares", "1024",
+        "--memory", "8g",
+        "--memory-swap", "16g",
+        "--ulimit", "nofile=65536:65536",
+        "--security-opt", "label=disable",
+        "--userns", "keep-id"
+    ],
     "customizations": {
         "vscode": {
             "extensions": [
