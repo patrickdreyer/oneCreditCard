@@ -57,7 +57,14 @@ def get_column_value(transaction, column_config, account_mapping):
     column_type = column_config['type']
     
     if column_type == 'date':
-        return format_date(transaction.date, column_config.get('format', 'DD.MM.YY'))
+        # Different date handling for grouped vs individual transactions
+        if hasattr(transaction, 'is_grouped') and transaction.is_grouped:
+            # Use month's last day for grouped transactions
+            date_value = get_month_last_day(transaction.month, transaction.year)
+        else:
+            # Use original date for individual transactions
+            date_value = transaction.date
+        return format_date(date_value, column_config.get('format', 'DD.MM.YY'))
     elif column_type == 'description':
         return get_description_from_mapping(transaction.category, account_mapping)
     elif column_type == 'debit_account':
@@ -74,6 +81,27 @@ def get_column_value(transaction, column_config, account_mapping):
 
 ### Data Transformation
 
+#### Date Handling for Different Transaction Types
+
+```python
+from datetime import datetime, date
+from calendar import monthrange
+
+def get_month_last_day(month, year):
+    """Get the last day of the specified month"""
+    last_day = monthrange(year, month)[1]
+    return date(year, month, last_day)
+
+def format_date(date_value, format_pattern):
+    """Format date according to specified pattern"""
+    if format_pattern == 'DD.MM.YY':
+        return date_value.strftime('%d.%m.%y')
+    elif format_pattern == 'DD.MM.YYYY':
+        return date_value.strftime('%d.%m.%Y')
+    else:
+        return date_value.strftime('%d.%m.%y')  # Default format
+```
+
 #### Transaction to Row Conversion
 
 ```python
@@ -81,9 +109,16 @@ def transaction_to_row(transaction):
     """Convert transaction object to ODS table row"""
     row = TableRow()
     
-    # Date formatting (DD.MM.YYYY -> DD.MM.YY)
+    # Date formatting with different logic for grouped vs individual
     date_cell = TableCell()
-    formatted_date = format_date_short(transaction.date)
+    if hasattr(transaction, 'is_grouped') and transaction.is_grouped:
+        # Use month's last day for grouped transactions
+        formatted_date = get_month_last_day(transaction.month, transaction.year)
+        formatted_date = format_date(formatted_date, 'DD.MM.YY')
+    else:
+        # Use original date for individual transactions
+        formatted_date = format_date(transaction.date, 'DD.MM.YY')
+    
     date_cell.addElement(P(text=formatted_date))
     row.addElement(date_cell)
     

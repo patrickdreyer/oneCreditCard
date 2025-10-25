@@ -65,16 +65,30 @@ If the configuration becomes significantly more complex or user feedback indicat
 
 ```json
 {
+  "creditAccount": "2110",
+  "ignore": {
+    "categories": [
+      "Einlagen",
+      "^Payment.*"
+    ],
+    "transactions": [
+      "Ihre Zahlung - Danke",
+      ".*automatic.*payment.*"
+    ]
+  },
   "mapping": {
     "Essen & Trinken": {
       "description": "Verpflegung",
-      "debitAccount": "5821",
-      "creditAccount": "2110"
+      "debitAccount": "5821"
+    },
+    "Transport": {
+      "pattern": "^(SBB|CFF|FFS|Bus|Tram).*",
+      "description": "Öffentlicher Verkehr",
+      "debitAccount": "6282"
     },
     "Fahrzeug": {
       "description": "Auto; Diesel",
-      "debitAccount": "6210",
-      "creditAccount": "2110"
+      "debitAccount": "6210"
     }
   },
   "columns": [
