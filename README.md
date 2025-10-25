@@ -63,7 +63,8 @@ python src/main.py --config custom-config.json
 📁 **[doc/requirements/](doc/requirements/README.md)** - Business requirements
 
 - **[Input Format](doc/requirements/01-input-format.md)** - Viseca text export structure  
-- **[Output Format](doc/requirements/02-output-format.md)** - Accounting ODS requirements
+- **[Output Format](doc/requirements/02-output-format.md)** - OpenOffice Calc file structure and format requirements
+- **[Transaction Processing](doc/requirements/03-transaction-processing.md)** - Business logic for filtering, grouping, mapping, and processing transactions
 
 📁 **[doc/technical/](doc/technical/README.md)** - Technical implementation
 

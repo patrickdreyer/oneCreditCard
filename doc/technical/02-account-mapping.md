@@ -1,23 +1,10 @@
-# Account Mapping
+# Account Mapping Implementation
 
 ## Purpose
 
-Map Viseca categories to accounting descriptions and account codes via JSON configuration.
+Technical implementation of category-to-account mapping from JSON configuration.
 
-## Category Mapping
-
-| Viseca Category | Description | Account |
-|-----------------|-------------|---------|
-| Essen & Trinken | Verpflegung | 5821 |
-| Fahrzeug | Auto; Diesel | 6210 |
-| Shopping | Shopping | 5800 |
-
-## Column Configuration Rules
-
-- **Core Columns**: Have `type` field, contain actual transaction data
-- **Optional Columns**: No `type` field, used for formatting/compatibility (remain empty)
-
-**Configuration Example:**
+## Configuration Structure
 
 ```json
 {
@@ -47,109 +34,59 @@ Map Viseca categories to accounting descriptions and account codes via JSON conf
 }
 ```
 
-## Processing Rules
+## Column Configuration Rules
 
-1. **Ignore**: Skip categories/transactions in ignore section
-2. **Map**: Apply category mapping to account codes
-3. **Group**: Sum transactions by final description
-4. **Unmapped**: Process individually with empty debit account
+- **Core Columns**: Have `type` field, contain actual transaction data
+- **Optional Columns**: No `type` field, used for formatting/compatibility (remain empty)
 
-### Ignore vs. Mapping Priority
+## Implementation Details
 
-- **Ignore takes precedence**: If a transaction matches both ignore and mapping rules, it will be ignored
-- **Complete exclusion**: Ignored transactions do not appear in output at all
-- **No processing**: Ignored transactions are not grouped, summed, or validated
+### Configuration Loading
 
-### Unmapped Transaction Handling
+```python
+def load_account_mapping(config_path):
+    """Load account mapping from JSON configuration"""
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+    return config
 
-For transactions that cannot be mapped to any category:
-
-- **Individual Processing**: Each unmapped transaction becomes a separate line item
-- **No Grouping**: These transactions are not summed with others
-- **Account Assignment**:
-  - `debitAccount`: Left empty (blank)
-  - `creditAccount`: Uses global `creditAccount` from configuration
-  - `description`: Original category name from Viseca export
-
-### Global Credit Account
-
-- **Single Value**: All transactions use the same `creditAccount` value
-- **Configuration**: Defined once at top level as `creditAccount`
-- **Simplification**: Removes redundancy from individual mappings
-- **Exception**: Special cases like "Einlagen" may override this pattern
-
-### Grouping and Summation
-
-- **Mapped Transactions**: Grouped by final accounting description and summed
-- **Unmapped Transactions**: Processed individually without grouping
-- **Output**: One line per group (mapped) or per transaction (unmapped)
-- **Details**: Original transaction information preserved in remarks if needed
-
-### Multi-Currency Handling
-
-- CHF amounts are summed directly
-- Foreign currency information is preserved in remarks column
-- No currency conversion performed (CHF amount always provided by Viseca)
-
-## Configuration Key Format
-
-### Category Key Format
-
-Configuration keys use the exact Viseca category text. The matching logic handles case and whitespace variations:
-
-| Viseca Category | Configuration Key | Matching Examples |
-|-----------------|-------------------|-------------------|
-| Essen & Trinken | "Essen & Trinken" | "ESSEN & trinken", "essen⎵⎵⎵&⎵⎵trinken" |
-| Fahrzeug | "Fahrzeug" | "FAHRZEUG", "fahrzeug" |
-| Shopping | "Shopping" | "SHOPPING", "shopping" |
-| Allgemeines | "Allgemeines" | "ALLGEMEINES", "allgemeines" |
-| Einlagen | "Einlagen" | "EINLAGEN", "einlagen" |
-| Reisen | "Reisen" | "REISEN", "reisen" |
-
-### Flexible Matching Logic
-
-The system performs case-insensitive and whitespace-flexible matching:
-
-- **Case-insensitive**: "Essen & Trinken" matches "ESSEN & trinken"
-- **Whitespace-flexible**: "Essen & Trinken" matches "Essen⎵⎵⎵&⎵⎵trinken"
-- **Combined**: "ESSEN⎵⎵⎵&⎵⎵trinken" matches "Essen & Trinken"
-
-**Implementation approach:**
-
-- Configuration keys are exact category names (e.g., "Essen & Trinken")
-- Matching normalizes both input and config key for comparison only
-- Original configuration structure preserved
-
-### Account Code Format
-
-- Account codes can be numeric (e.g., "5821") or alphanumeric
-- String format recommended for flexibility
-- Consistent format within each configuration
-
-## Example Output Impact
-
-**Input Transactions:**
-
-```text
-Essen & Trinken: 4.30 CHF + 18.50 CHF + 10.00 CHF = 32.80 CHF
-Fahrzeug: 85.25 CHF
-SBB CFF FFS: 6.40 CHF
-Einlagen: -157.95 CHF (ignored - category)
-Ihre Zahlung - Danke: -50.00 CHF (ignored - transaction)
-Unbekannte Kategorie: 15.60 CHF (unmapped)
+def get_account_codes(category, account_mapping):
+    """Get debit and credit account codes for category"""
+    mapping = account_mapping.get('mapping', {}).get(category, {})
+    debit = mapping.get('debitAccount', '')
+    credit = account_mapping.get('creditAccount', '2110')
+    return debit, credit
 ```
 
-**Grouped Output:**
+### Flexible Category Matching
 
-```text
-Datum     | Beschreibung | KtSoll | KtHaben | Betrag CHF
-31.07.25  | Verpflegung  | 5821   | 2110    | 32.80
-31.07.25  | Auto; Diesel | 6210   | 2110    | 85.25  
-24.07.25  | SBB          | 6282   | 2110    | 6.40
-25.07.25  | Unbekannte Kategorie |    | 2110    | 15.60
+```python
+def normalize_category(category):
+    """Normalize category for flexible matching"""
+    return re.sub(r'\s+', ' ', category.strip().lower())
+
+def find_matching_category(input_category, config_mapping):
+    """Find matching category with flexible matching"""
+    normalized_input = normalize_category(input_category)
+    
+    for config_key in config_mapping.keys():
+        if normalize_category(config_key) == normalized_input:
+            return config_key
+    return None
 ```
 
-**Note**:
+### Error Handling
 
-- Ignored transactions ("Einlagen", "Ihre Zahlung - Danke") do not appear in output
-- Unmapped transactions appear individually with empty debitAccount
+```python
+def validate_configuration(config):
+    """Validate configuration structure"""
+    required_fields = ['creditAccount', 'mapping', 'columns']
+    for field in required_fields:
+        if field not in config:
+            raise ConfigurationError(f"Missing required field: {field}")
+    
+    # Validate account codes format
+    for category, mapping in config['mapping'].items():
+        if 'debitAccount' not in mapping:
+            raise ConfigurationError(f"Missing debitAccount for {category}")
+```
