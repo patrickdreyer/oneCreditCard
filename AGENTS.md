@@ -7,7 +7,7 @@
 
 ## AI Rules
 
-1. **Context Loading**: When user writes "load ai.md", read this file AND README.md AND all documentation in doc/ directory
+1. **Context Loading**: When user writes "load AGENTS.md", read this file AND README.md AND all documentation in doc/ directory
 1. **Development Context**: Reference complete documentation structure for project details
 1. **Collaboration Support**: Provide hands-on technical assistance for DevContainer setup to Alexandra
    - **Cross-Platform Awareness**: Consider Ubuntu + Mac + Windows compatibility in all recommendations
