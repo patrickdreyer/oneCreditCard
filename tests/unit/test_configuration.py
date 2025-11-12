@@ -83,6 +83,39 @@ class TestConfiguration:
         with pytest.raises(ValueError, match="must have description and debitAccount"):
             Configuration(filePath)
 
+    def test_ctor_invalidMappingPattern_error(self, writeConfig):
+        # arrange
+        filePath = writeConfig("invalid_pattern.json", {
+            "creditAccount": "2110",
+            "mapping": {
+                "Food": {
+                    "description": "Meals",
+                    "debitAccount": "5821",
+                    "pattern": "[unclosed"  # Invalid regex
+                }
+            },
+            "columns": []
+        })
+
+        # act & assert
+        with pytest.raises(ValueError, match="Invalid regex pattern in mapping rule"):
+            Configuration(filePath)
+
+    def test_ctor_invalidIgnorePattern_error(self, writeConfig):
+        # arrange
+        filePath = writeConfig("invalid_ignore.json", {
+            "creditAccount": "2110",
+            "mapping": {},
+            "columns": [],
+            "ignore": {
+                "transactions": ["(invalid"]  # Invalid regex
+            }
+        })
+
+        # act & assert
+        with pytest.raises(ValueError, match="Invalid regex pattern in ignore transaction pattern"):
+            Configuration(filePath)
+
 
 class TestConfigurationProperties:
     @pytest.fixture
@@ -216,30 +249,6 @@ class TestConfigurationClassMethods:
         # act & assert
         with pytest.raises(FileNotFoundError):
             Configuration.fromDirectory(tmp_path)
-
-    def test_validatePattern_validPattern_true(self, writeConfig):
-        # arrange
-        configPath = writeConfig("test.json", {"creditAccount": "2110", "mapping": {}, "columns": []})
-        testee = Configuration(configPath)
-
-        # act
-        result1 = testee.validatePattern("^test.*")
-        result2 = testee.validatePattern("\\d+")
-
-        # assert
-        assert result1 is True
-        assert result2 is True
-
-    def test_validatePattern_invalidPattern_false(self, writeConfig):
-        # arrange
-        configPath = writeConfig("test.json", {"creditAccount": "2110", "mapping": {}, "columns": []})
-        testee = Configuration(configPath)
-
-        # act
-        result = testee.validatePattern("[unclosed")
-
-        # assert
-        assert result is False
 
     def test_repr_validConfig_stringRepresentation(self, writeConfig):
         # arrange

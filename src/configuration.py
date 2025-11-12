@@ -60,9 +60,23 @@ class Configuration:
                 raise ValueError(f"Mapping rule for '{category}' must be an object")
             if 'description' not in rule or 'debitAccount' not in rule:
                 raise ValueError(f"Mapping rule for '{category}' must have description and debitAccount")
+            if 'pattern' in rule:
+                self.__validatePattern(rule['pattern'], f"mapping rule for '{category}'")
 
         if not isinstance(self._config['columns'], list):
             raise ValueError("columns must be an array")
+
+        ignoreConfig = self._config.get('ignore', {})
+        if 'transactions' in ignoreConfig:
+            for pattern in ignoreConfig['transactions']:
+                self.__validatePattern(pattern, "ignore transaction pattern")
+
+    @staticmethod
+    def __validatePattern(pattern: str, context: str) -> None:
+        try:
+            re.compile(pattern)
+        except re.error as exc:
+            raise ValueError(f"Invalid regex pattern in {context}: {pattern}") from exc
 
     @property
     def creditAccount(self) -> str:
@@ -110,13 +124,6 @@ class Configuration:
     def fromDirectory(cls, directory: Path) -> 'Configuration':
         configPath = directory / 'onecreditcard.json'
         return cls(configPath)
-
-    def validatePattern(self, pattern: str) -> bool:
-        try:
-            re.compile(pattern)
-            return True
-        except re.error:
-            return False
 
     def __repr__(self) -> str:
         return f"Configuration(path={self.configPath}, rules={len(self.mappingRules)})"
