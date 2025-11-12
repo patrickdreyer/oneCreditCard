@@ -1,0 +1,68 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "oneCreditCard"
+version = "0.0.1"
+description = "Python tool converting Viseca credit card text exports into accounting-ready OpenOffice Calc spreadsheets"
+readme = "README.md"
+requires-python = "== 3.13"
+license = {text = "GPL-3.0-only"}
+authors = [
+  {name = "Patrick Dreyer", email = "Patrick@Dreyer.name"}
+]
+keywords = ["accounting", "finance", "credit card", "export", "ods"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Financial and Insurance Industry",
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Office/Business :: Financial :: Accounting",
+]
+
+[project.urls]
+Homepage = "https://github.com/patrickdreyer/oneCreditCard"
+Repository = "https://github.com/patrickdreyer/oneCreditCard"
+Issues = "https://github.com/patrickdreyer/oneCreditCard/issues"
+Changelog = "https://github.com/patrickdreyer/oneCreditCard/releases"
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+addopts = [
+    "--import-mode=importlib",
+]
+
+[tool.pylint.messages_control]
+disable = [
+    "C0114",  # missing-module-docstring
+    "C0115",  # missing-class-docstring
+    "C0116",  # missing-function-docstring
+    "C0301",  # line-too-long
+    "R0903",  # too-few-public-methods
+    "W4901",  # deprecated-module (false positive for our parser package)
+]
+
+[tool.pylint.MASTER]
+init-hook = "import sys; sys.path.insert(0, 'src')"
+
+[tool.pylint.BASIC]
+# Allow camelCase naming
+function-naming-style = "camelCase"
+method-naming-style = "camelCase"
+variable-naming-style = "camelCase"
+attr-naming-style = "camelCase"
+argument-naming-style = "camelCase"
+# Module names can be camelCase too
+module-naming-style = "any"
+# Custom method regex:
+# - camelCase: myMethod
+# - private/protected camelCase: _myMethod, __myMethod
+# - dunder methods: __init__, __str__, __post_init__, etc.
+# - test methods: test_method_input_output
+# - pytest fixtures: setup_class, teardown_class
+method-rgx = "^(__[a-z_]+__|_?_?[a-z][a-zA-Z0-9]*|test_[a-z][a-zA-Z0-9_]*|setup_class|teardown_class|setup_method)$"
+# Custom attribute regex: same as methods but for class/instance attributes
+attr-rgx = "^(__[a-z]+__|_?_?[a-z][a-zA-Z0-9]*)$"
