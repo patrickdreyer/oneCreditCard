@@ -3,7 +3,7 @@
 ## Project
 
 - **Purpose**: Convert Viseca credit card text exports to accounting ODS files
-- **Status**: Documentation complete, ready for implementation
+- **Status**: Core parser implementation complete, ODS generation pending
 
 ## AI Rules
 
@@ -12,12 +12,13 @@
 1. **Collaboration Support**: Provide hands-on technical assistance for DevContainer setup to Alexandra
    - **Cross-Platform Awareness**: Consider Ubuntu + Mac + Windows compatibility in all recommendations
 1. **Container-First Approach**: Assume Podman + Dev Containers as primary development environment
-1. **Context Updates**: Proactively propose updates to ai.md when new information or changes are relevant
-1. **No Context Proposals**: Never provide proposed changes for ai.md context itself - update directly
+1. **Context Updates**: Proactively propose updates to AGENTS.md when new information or changes are relevant
+1. **No Context Proposals**: Never provide proposed changes for AGENTS.md context itself - update directly
 1. **Code Proposals**: Show diffs/descriptions only, not full code blocks unless explicitly requested
 1. **Confirmation Required**: Any changes within the project must be confirmed by the user before execution
-1. **Short & Concise**: Keep responses brief and to the point. No unnecessary explanations.
+1. **Short & Concise**: Keep responses brief and to the point. No unnecessary explanations or summaries.
 1. **English Only**: All responses and artifacts must be in English, regardless of chat language used
+1. **No Repetition**: Don't repeat user instructions or acknowledge with "understood", "you're right", etc.
 1. **No Assumptions**: Always ask for approval before:
    - Creating new files or directories
    - Modifying existing code
