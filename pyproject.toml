@@ -66,3 +66,5 @@ module-naming-style = "any"
 method-rgx = "^(__[a-z_]+__|_?_?[a-z][a-zA-Z0-9]*|test_[a-z][a-zA-Z0-9_]*|setup_class|teardown_class|setup_method)$"
 # Custom attribute regex: same as methods but for class/instance attributes
 attr-rgx = "^(__[a-z]+__|_?_?[a-z][a-zA-Z0-9]*)$"
+# Custom argument regex: allows pytest fixtures like tmp_path
+argument-rgx = "^[a-z][a-zA-Z0-9]*$|^tmp_path$|^capfd$|^capsys$|^monkeypatch$"
