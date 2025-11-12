@@ -16,15 +16,11 @@
             "extensions": [
                 // Python Development
                 "ms-python.python",
-                "ms-python.pylint",
+                "ms-python.pylint", 
                 "ms-python.black-formatter",
-                "ms-python.flake8",
                 "charliermarsh.ruff",
                 // Testing
                 "ms-python.pytest",
-                // Git Tools
-                "mhutchie.git-graph",
-                "eamodio.gitlens",
                 // Documentation & Markdown
                 "yzhang.markdown-all-in-one",
                 "davidanson.vscode-markdownlint",
