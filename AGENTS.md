@@ -3,7 +3,16 @@
 ## Project
 
 - **Purpose**: Convert Viseca credit card text exports to accounting ODS files
-- **Status**: Core parser implementation complete, ODS generation pending
+- **Status**: Phase 1.2 in progress - Account mapping implementation started
+
+## Code Style Rules
+
+1. **Naming**: Follow pylint configuration in pyproject.toml
+1. **No Docstrings**: Use single-line comments only, avoid triple-quoted strings
+1. **Minimal Comments**: Only comment complex logic, avoid obvious comments
+1. **Iterator Pattern**: Return Iterator[T] instead of List[T] for memory efficiency
+1. **Test Naming**: test_\<methodInCamelCase\>_\<inputInCamelCase\>_\<resultInCamelCase\> (use "ctor" for constructor, "error" for exceptions)
+1. **Test Structure**: Use AAA pattern (# arrange, # act, # assert) in all test methods - omit "arrange" when nothing needs setup
 
 ## AI Rules
 

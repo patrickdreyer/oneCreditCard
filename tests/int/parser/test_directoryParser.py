@@ -7,9 +7,9 @@ class TestDirectoryParser:
     def setup_method(self):
         self.testee = DirectoryParser()  # pylint: disable=attribute-defined-outside-init
 
-    def test_parse_validDirectory_transactions(self, tmp_path):
+    def test_parse_validDirectory_transactions(self, writeFile):
         # arrange
-        self.__writeFile(tmp_path / "2025-07_1.txt", """
+        file1 = writeFile("2025-07_1.txt", """
 Essen & Trinken
 
 *Restaurant 1*
@@ -17,7 +17,7 @@ Essen & Trinken
 *10.00*  CHF
 <https://one.viseca.ch/de/transaktionen/detail/TRX123>
 """)
-        self.__writeFile(tmp_path / "2025-07_2.txt", """
+        writeFile("2025-07_2.txt", """
 Shopping
 
 *Shop 1*
@@ -27,7 +27,7 @@ Shopping
 """)
 
         # act
-        transactions = list(self.testee.parse(str(tmp_path)))
+        transactions = list(self.testee.parse(str(file1.parent)))
 
         # assert
         assert len(transactions) == 2
@@ -44,27 +44,27 @@ Shopping
         with pytest.raises(FileNotFoundError, match="Directory not found"):
             list(self.testee.parse(nonexistentDir))
 
-    def test_parse_pathIsFile_error(self, tmp_path):
+    def test_parse_pathIsFile_error(self, writeFile):
         # arrange
-        file = self.__writeFile(tmp_path / "test.txt", "content")
+        file = writeFile("test.txt", "content")
 
         # act & assert
         with pytest.raises(ValueError, match="Path is not a directory"):
             list(self.testee.parse(str(file)))
 
-    def test_parse_noMatchingFiles_emptyResult(self, tmp_path):
+    def test_parse_noMatchingFiles_emptyResult(self, writeFile):
         # arrange
-        self.__writeFile(tmp_path / "test.csv", "content")
+        csvFile = writeFile("test.csv", "content")
 
         # act
-        transactions = list(self.testee.parse(str(tmp_path)))
+        transactions = list(self.testee.parse(str(csvFile.parent)))
 
         # assert
         assert len(transactions) == 0
 
-    def test_parse_customPattern_matchesPattern(self, tmp_path):
+    def test_parse_customPattern_matchesPattern(self, writeFile):
         # arrange
-        self.__writeFile(tmp_path / "data.dat", """
+        datFile = writeFile("data.dat", """
 Essen & Trinken
 
 *Test Restaurant*
@@ -74,12 +74,8 @@ Essen & Trinken
 """)
 
         # act
-        transactions = list(self.testee.parse(str(tmp_path), "*.dat"))
+        transactions = list(self.testee.parse(str(datFile.parent), "*.dat"))
 
         # assert
         assert len(transactions) == 1
         assert transactions[0].amount == 15.00
-
-    def __writeFile(self, path, content):
-        path.write_text(content, encoding='utf-8')
-        return path
