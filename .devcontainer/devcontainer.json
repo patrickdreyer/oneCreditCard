@@ -43,6 +43,7 @@
     },
     "mounts": [
         "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/.cache/pip,target=/home/vscode/.cache/pip,type=bind,consistency=cached"
     ],
     "postCreateCommand": "pip install -r requirements.txt && echo && echo '╔══════════════════════════════════════════════════════════════╗' && echo '║                     🤖 AI CONTEXT REMINDER                   ║' && echo '║                                                              ║' && echo '║  Type in AI Chat: load ai.md                                 ║' && echo '║                                                              ║' && echo '║  This loads the complete project context for better AI       ║' && echo '║  assistance with oneCreditCard development.                  ║' && echo '╚══════════════════════════════════════════════════════════════╝' && echo",
     "remoteUser": "vscode",
