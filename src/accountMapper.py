@@ -5,6 +5,9 @@ from typing import Iterator, List, Optional
 from src.parser.transaction import Transaction
 from src.configuration import Configuration, MappingRule
 from src.transactionGrouper import Group
+from src.logging_config import getLogger
+
+logger = getLogger(__name__)
 
 
 @dataclass
@@ -22,13 +25,24 @@ class AccountMapper:
 
     def mapTransactions(self, transactions: List[Transaction]) -> Iterator[BookingEntry]:
         # Maps transactions to account codes and descriptions based on configuration
+        mappedCount = 0
+        unmappedCount = 0
+        ignoredCount = 0
+        
         for transaction in transactions:
             if self.__ignored(transaction):
+                ignoredCount += 1
+                logger.debug("Transaction ignored; merchant='%s', category='%s'", 
+                            transaction.merchant, transaction.category)
                 continue
 
             mappingRule = self.__findMappingRule(transaction)
             if mappingRule:
                 # Create mapped transaction with mapping information
+                mappedCount += 1
+                logger.debug("Transaction mapped; merchant='%s', category='%s', description='%s', debitAccount='%s'",
+                            transaction.merchant, transaction.category, 
+                            mappingRule.description, mappingRule.debitAccount)
                 yield BookingEntry(
                     mappedDescription=mappingRule.description,
                     debitAccount=mappingRule.debitAccount,
@@ -37,18 +51,31 @@ class AccountMapper:
                 )
             else:
                 # Unmapped transaction - use merchant as description, no debit account
+                unmappedCount += 1
+                logger.debug("Transaction unmapped; merchant='%s', category='%s'",
+                            transaction.merchant, transaction.category)
                 yield BookingEntry(
                     mappedDescription=transaction.merchant,
                     debitAccount=None,
                     creditAccount=self.configuration.creditAccount,
                     transaction=transaction
                 )
+        
+        logger.info("Transactions mapped; total=%d, mapped=%d, unmapped=%d, ignored=%d",
+                   len(transactions), mappedCount, unmappedCount, ignoredCount)
 
     def mapGroups(self, groups: List[Group]) -> Iterator[BookingEntry]:
         # Map grouped transactions
+        mappedCount = 0
+        unmappedCount = 0
+        
         for group in groups:
             mappingRule = self.__findMappingRuleByCategory(group.category)
             if mappingRule:
+                mappedCount += 1
+                logger.debug("Group mapped; category='%s', description='%s', debitAccount='%s', transactions=%d",
+                            group.category, mappingRule.description, 
+                            mappingRule.debitAccount, len(group.transactions))
                 yield BookingEntry(
                     mappedDescription=mappingRule.description,
                     debitAccount=mappingRule.debitAccount,
@@ -57,12 +84,18 @@ class AccountMapper:
                 )
             else:
                 # This shouldn't happen if grouping is correct, but handle it
+                unmappedCount += 1
+                logger.debug("Group unmapped; category='%s', transactions=%d",
+                            group.category, len(group.transactions))
                 yield BookingEntry(
                     mappedDescription=group.category,
                     debitAccount=None,
                     creditAccount=self.configuration.creditAccount,
                     group=group
                 )
+        
+        logger.info("Groups mapped; total=%d, mapped=%d, unmapped=%d",
+                   len(groups), mappedCount, unmappedCount)
 
     def __ignored(self, transaction: Transaction) -> bool:
         return self.__ignoredCategory(transaction) or self.__ignoredTransaction(transaction)

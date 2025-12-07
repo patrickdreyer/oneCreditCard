@@ -6,6 +6,9 @@ from typing import Iterator, List, Tuple
 
 from src.configuration import Configuration
 from src.parser.transaction import Transaction
+from src.logging_config import getLogger
+
+logger = getLogger(__name__)
 
 
 @dataclass
@@ -30,8 +33,12 @@ class TransactionGrouper:
                 if category not in toBeGrouped:
                     toBeGrouped[category] = []
                 toBeGrouped[category].append(transaction)
+                logger.debug("Transaction added to group; merchant='%s', category='%s'",
+                            transaction.merchant, category)
             else:
                 individual.append(transaction)
+                logger.debug("Transaction kept individual; merchant='%s', category='%s'",
+                            transaction.merchant, transaction.category)
 
         groups = []
         for category, categoryTransactions in toBeGrouped.items():
@@ -46,6 +53,9 @@ class TransactionGrouper:
                     transactions=categoryTransactions,
                 )
             )
+            logger.debug("Group created; category='%s', transactions=%d, totalAmount=%.2f",
+                        category, len(categoryTransactions), totalAmount)
+        
         return individual, groups
 
     def __canGroup(self, transaction: Transaction) -> bool:
@@ -68,7 +78,8 @@ class TransactionGrouper:
     def __matchesPattern(self, text: str, pattern: str) -> bool:
         try:
             return re.search(pattern, text, re.IGNORECASE) is not None
-        except re.error:
+        except re.error as exc:
+            logger.error("Invalid regex pattern in grouping; pattern='%s', error='%s'", pattern, exc)
             return pattern.lower() in text.lower()
 
     def __getMonthEndDate(self, date: datetime) -> datetime:
