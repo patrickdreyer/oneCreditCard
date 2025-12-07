@@ -27,7 +27,7 @@ class TestOdsGenerator:
                 {"name": "Bemerkungen", "type": "remarks"}
             ]
         }
-        config = Configuration(writeConfig("test.json", configData))
+        config = Configuration(writeConfig(configData))
         self.testee = OdsGenerator(config)  # pylint: disable=attribute-defined-outside-init
         self.outputDir = tmp_path  # pylint: disable=attribute-defined-outside-init
 
@@ -166,7 +166,7 @@ class TestOdsGenerator:
                 {"name": "KS1"}  # Optional column
             ]
         }
-        config = Configuration(writeConfig("optional.json", configData))
+        config = Configuration(writeConfig(configData))
         testee = OdsGenerator(config)
         
         transaction = Transaction("Food", "Restaurant", datetime(2025, 7, 15), None, None, 25.50)

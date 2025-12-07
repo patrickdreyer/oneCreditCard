@@ -23,7 +23,7 @@ class TestTransactionGrouper:
             },
             "columns": []
         }
-        config = Configuration(writeConfig("test.json", configData))
+        config = Configuration(writeConfig(configData))
         self.testee = TransactionGrouper(config)  # pylint: disable=attribute-defined-outside-init
 
     def test_group_mappedCategory_grouped(self):
@@ -159,7 +159,7 @@ class TestTransactionGrouper:
             },
             "columns": []
         }
-        config = Configuration(writeConfig("pattern.json", configData))
+        config = Configuration(writeConfig(configData))
         testee = TransactionGrouper(config)
         transactions = [
             Transaction("Transport", "SBB CFF FFS", datetime(2025, 7, 15), None, None, 15.00),

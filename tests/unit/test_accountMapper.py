@@ -29,7 +29,7 @@ class TestAccountMapper:
             },
             "columns": []
         }
-        config = Configuration(writeConfig("test.json", configData))
+        config = Configuration(writeConfig(configData))
         self.testee = AccountMapper(config)  # pylint: disable=attribute-defined-outside-init
 
     def test_mapTransactions_mappedCategory_bookingEntry(self):
