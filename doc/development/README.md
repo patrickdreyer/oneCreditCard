@@ -1,10 +1,4 @@
-# Development Overview
-
-Development guidance for the oneCreditCard project.
-
-## Status
-
-**Ready to implement** - Requirements and architecture complete
+# Development Guide
 
 ## Branch Naming Convention
 
@@ -52,9 +46,3 @@ Examples:
 - `fix: handle empty directory gracefully`
 - `test: add E2E tests for complete pipeline`
 - `docs: update branch naming conventions`
-
-## Documents
-
-- **[Implementation Guide](01-implementation-guide.md)** - Development phases and testing strategy  
-- **[Parsing Implementation](02-parsing-implementation.md)** - Text parsing patterns and regex implementation
-- **[ODS Generation](03-ods-generation.md)** - OpenOffice Calc file generation technical details
