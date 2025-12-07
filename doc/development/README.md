@@ -25,6 +25,34 @@ Use the following prefixes for branch names:
 - **`chore/`** - Maintenance tasks, dependencies, build configuration
   - Example: `chore/update-dependencies`, `chore/ci-pipeline`
 
+## Commit Message Prefixes
+
+**Format**: `<prefix>: <short description in imperative mood>`
+
+Use the following prefixes for commit messages to provide instant clarity:
+
+- **`feat:`** - Adding a new feature
+  - Example: `feat: add multi-file batch processing`
+- **`fix:`** - Fixing a bug
+  - Example: `fix: correct date parsing for foreign transactions`
+- **`chore:`** - Routine tasks (build, config, dependencies)
+  - Example: `chore: update odfpy to version 1.4.1`
+- **`refac:`** - Code restructuring without changing behavior
+  - Example: `refac: simplify transaction grouping logic`
+- **`docs:`** - Documentation updates
+  - Example: `docs: add configuration examples to README`
+- **`test:`** - Adding or updating tests
+  - Example: `test: add integration tests for account mapper`
+- **`style:`** - Code style changes (formatting, indentation)
+  - Example: `style: fix pylint warnings in parser module`
+
+Examples:
+
+- `feat: implement CLI interface with argparse`
+- `fix: handle empty directory gracefully`
+- `test: add E2E tests for complete pipeline`
+- `docs: update branch naming conventions`
+
 ## Documents
 
 - **[Implementation Guide](01-implementation-guide.md)** - Development phases and testing strategy  
