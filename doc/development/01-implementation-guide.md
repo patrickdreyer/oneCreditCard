@@ -31,10 +31,9 @@
 ### Phase 2: Advanced Features (with Integration Testing)
 
 1. **Multi-File Support** - Batch processing for monthly statements
-   - File pattern recognition
+   - Directory parsing (all .txt files)
    - Multi-file aggregation
-   - Duplicate detection
-   - Monthly consolidation
+   - Transaction consolidation
    - **Integration tests** with multiple test files
 
 1. **Error Handling** - Robust error reporting and logging
