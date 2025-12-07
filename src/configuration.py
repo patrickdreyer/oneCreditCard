@@ -4,6 +4,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from src.logging_config import getLogger
+
+logger = getLogger(__name__)
+
 
 @dataclass
 class ColumnConfig:
@@ -39,31 +43,44 @@ class Configuration:
             with open(self.configPath, 'r', encoding='utf-8') as file:
                 self._config = json.load(file)
         except FileNotFoundError as exc:
+            logger.error("Configuration file not found; path='%s'", self.configPath)
             raise FileNotFoundError(f"Configuration file not found: {self.configPath}") from exc
         except json.JSONDecodeError as exc:
+            logger.error("Invalid JSON in configuration file; path='%s', error='%s'", self.configPath, exc)
             raise ValueError(f"Invalid JSON in configuration file: {exc}") from exc
+        
+        logger.info("Configuration loaded; path='%s', mapping_rules=%d, columns=%d", 
+                    self.configPath, len(self._config.get('mapping', {})), 
+                    len(self._config.get('columns', [])))
 
     def __validateConfiguration(self) -> None:
         requiredFields = ['creditAccount', 'mapping', 'columns']
         for field in requiredFields:
             if field not in self._config:
+                logger.error("Missing required configuration field; field='%s'", field)
                 raise ValueError(f"Missing required configuration field: {field}")
 
         if not isinstance(self._config['creditAccount'], str):
+            logger.error("Invalid creditAccount type; type='%s'", type(self._config['creditAccount']).__name__)
             raise ValueError("creditAccount must be a string")
 
         if not isinstance(self._config['mapping'], dict):
+            logger.error("Invalid mapping type; type='%s'", type(self._config['mapping']).__name__)
             raise ValueError("mapping must be an object")
 
         for category, rule in self._config['mapping'].items():
             if not isinstance(rule, dict):
+                logger.error("Invalid mapping rule type; category='%s', type='%s'", category, type(rule).__name__)
                 raise ValueError(f"Mapping rule for '{category}' must be an object")
             if 'description' not in rule or 'debitAccount' not in rule:
+                logger.error("Missing required mapping rule fields; category='%s', has_description=%s, has_debitAccount=%s", 
+                            category, 'description' in rule, 'debitAccount' in rule)
                 raise ValueError(f"Mapping rule for '{category}' must have description and debitAccount")
             if 'pattern' in rule:
                 self.__validatePattern(rule['pattern'], f"mapping rule for '{category}'")
 
         if not isinstance(self._config['columns'], list):
+            logger.error("Invalid columns type; type='%s'", type(self._config['columns']).__name__)
             raise ValueError("columns must be an array")
 
         ignoreConfig = self._config.get('ignore', {})
@@ -76,6 +93,7 @@ class Configuration:
         try:
             re.compile(pattern)
         except re.error as exc:
+            logger.error("Invalid regex pattern; context='%s', pattern='%s', error='%s'", context, pattern, exc)
             raise ValueError(f"Invalid regex pattern in {context}: {pattern}") from exc
 
     @property

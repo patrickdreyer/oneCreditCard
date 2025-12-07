@@ -7,6 +7,9 @@ from odf.text import P
 
 from src.accountMapper import BookingEntry
 from src.configuration import Configuration, ColumnConfig
+from src.logging_config import getLogger
+
+logger = getLogger(__name__)
 
 
 class OdsGenerator:
@@ -14,16 +17,26 @@ class OdsGenerator:
         self.configuration = configuration
 
     def generate(self, entries: List[BookingEntry], outputPath: Path) -> None:
-        doc = OpenDocumentSpreadsheet()
+        logger.info("Starting ODS generation; output_path='%s', entries=%d", outputPath, len(entries))
+        
+        try:
+            doc = OpenDocumentSpreadsheet()
 
-        table = Table(name="Transactions")
-        self.__addHeaderRow(table)
+            table = Table(name="Transactions")
+            self.__addHeaderRow(table)
 
-        for entry in entries:
-            self.__addDataRow(table, entry)
+            for idx, entry in enumerate(entries, start=1):
+                self.__addDataRow(table, entry)
+                logger.debug("Row added; row=%d, description='%s', debitAccount='%s'",
+                            idx, entry.mappedDescription, entry.debitAccount or "")
 
-        doc.spreadsheet.addElement(table)
-        doc.save(str(outputPath))
+            doc.spreadsheet.addElement(table)
+            doc.save(str(outputPath))
+            
+            logger.info("ODS generation completed; output_path='%s', rows=%d", outputPath, len(entries))
+        except Exception as exc:
+            logger.error("ODS generation failed; output_path='%s', error='%s'", outputPath, exc)
+            raise
 
     def __addHeaderRow(self, table: Table) -> None:
         row = TableRow()
