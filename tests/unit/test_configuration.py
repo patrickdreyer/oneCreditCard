@@ -5,7 +5,7 @@ from src.configuration import Configuration, ColumnConfig, MappingRule, IgnoreRu
 class TestConfiguration:
     def test_ctor_validConfig_loaded(self, writeConfig):
         # arrange
-        configPath = writeConfig("test.json", {
+        configPath = writeConfig({
             "creditAccount": "2110",
             "mapping": {"Food": {"description": "Meals", "debitAccount": "5821"}},
             "columns": [{"name": "Date", "type": "date"}]
@@ -39,7 +39,7 @@ class TestConfiguration:
 
     def test_ctor_missingRequiredFields_error(self, writeConfig):
         # arrange
-        filePath = writeConfig("incomplete.json", {"mapping": {}, "columns": []})
+        filePath = writeConfig({"mapping": {}, "columns": []})
 
         # act & assert
         with pytest.raises(ValueError, match="Missing required configuration field: creditAccount"):
@@ -47,7 +47,7 @@ class TestConfiguration:
 
     def test_ctor_invalidCreditAccount_error(self, writeConfig):
         # arrange
-        filePath = writeConfig("invalid_credit.json", {
+        filePath = writeConfig({
             "creditAccount": 123,  # Should be string
             "mapping": {},
             "columns": []
@@ -59,7 +59,7 @@ class TestConfiguration:
 
     def test_ctor_invalidMappingStructure_error(self, writeConfig):
         # arrange
-        filePath = writeConfig("invalid_mapping.json", {
+        filePath = writeConfig({
             "creditAccount": "2110",
             "mapping": "not an object",  # Should be dict
             "columns": []
@@ -71,7 +71,7 @@ class TestConfiguration:
 
     def test_ctor_incompleteMappingRule_error(self, writeConfig):
         # arrange
-        filePath = writeConfig("invalid_mapping.json", {
+        filePath = writeConfig({
             "creditAccount": "2110",
             "mapping": {
                 "Food": {"description": "Meals"}  # Missing debitAccount
@@ -85,7 +85,7 @@ class TestConfiguration:
 
     def test_ctor_invalidMappingPattern_error(self, writeConfig):
         # arrange
-        filePath = writeConfig("invalid_pattern.json", {
+        filePath = writeConfig({
             "creditAccount": "2110",
             "mapping": {
                 "Food": {
@@ -103,7 +103,7 @@ class TestConfiguration:
 
     def test_ctor_invalidIgnorePattern_error(self, writeConfig):
         # arrange
-        filePath = writeConfig("invalid_ignore.json", {
+        filePath = writeConfig({
             "creditAccount": "2110",
             "mapping": {},
             "columns": [],
@@ -144,7 +144,7 @@ class TestConfigurationProperties:
                 {"name": "Amount", "type": "amount", "format": "decimal"}
             ]
         }
-        configPath = writeConfig("valid.json", configData)
+        configPath = writeConfig(configData)
         return Configuration(configPath)
 
     def testCreditAccount(self, validConfig):
@@ -165,7 +165,7 @@ class TestConfigurationProperties:
 
     def test_ignoreRules_emptyIgnoreSection_emptyLists(self, writeConfig):
         # arrange
-        configPath = writeConfig("no_ignore.json", {
+        configPath = writeConfig({
             "creditAccount": "2110",
             "mapping": {},
             "columns": []
@@ -233,7 +233,7 @@ class TestConfigurationProperties:
 class TestConfigurationClassMethods:
     def test_fromDirectory_validDirectory_configurationObject(self, writeConfig):
         # arrange
-        configPath = writeConfig("onecreditcard.json", {
+        configPath = writeConfig({
             "creditAccount": "2110",
             "mapping": {},
             "columns": []
@@ -252,7 +252,7 @@ class TestConfigurationClassMethods:
 
     def test_repr_validConfig_stringRepresentation(self, writeConfig):
         # arrange
-        configPath = writeConfig("test.json", {
+        configPath = writeConfig({
             "creditAccount": "2110",
             "mapping": {"Food": {"description": "Meals", "debitAccount": "5821"}},
             "columns": []

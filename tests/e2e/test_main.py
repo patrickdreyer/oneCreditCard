@@ -1,7 +1,5 @@
 import json
-import shutil
 import sys
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -14,33 +12,6 @@ class TestMain:
     def setup(self, tmp_path, monkeypatch):
         # arrange
         monkeypatch.chdir(tmp_path)
-
-    @pytest.fixture
-    def fixturesDir(self):
-        return Path(__file__).parent.parent / 'fixtures' / 'inputs'
-
-    @pytest.fixture
-    def setupInputDir(self, tmp_path, fixturesDir):
-        def _setupInputDir(files):
-            inputDir = tmp_path / 'input'
-            inputDir.mkdir(parents=True, exist_ok=True)
-            for filename in files:
-                srcFile = fixturesDir / filename
-                dstFile = inputDir / filename
-                shutil.copy(srcFile, dstFile)
-            return inputDir
-        return _setupInputDir
-
-    @pytest.fixture
-    def writeConfig(self, tmp_path):
-        def _writeConfig(directory, configData):
-            inputDir = tmp_path / directory
-            inputDir.mkdir(parents=True, exist_ok=True)
-            configPath = inputDir / 'onecreditcard.json'
-            with open(configPath, 'w', encoding='utf-8') as f:
-                json.dump(configData, f)
-            return configPath
-        return _writeConfig
 
     def test_main_singleFile_successfulProcessing(self, setupInputDir, writeConfig, tmp_path):
         # arrange
@@ -62,7 +33,7 @@ class TestMain:
                 {'name': 'Betrag CHF', 'type': 'amountChf'}
             ]
         }
-        writeConfig('input', configData)
+        writeConfig(configData, 'input')
         
         outputFile = tmp_path / 'output.ods'
         
@@ -94,7 +65,7 @@ class TestMain:
                 {'name': 'Betrag CHF', 'type': 'amountChf'}
             ]
         }
-        writeConfig('input', configData)
+        writeConfig(configData, 'input')
         
         outputFile = tmp_path / 'output.ods'
         
@@ -119,7 +90,7 @@ class TestMain:
                 {'name': 'Betrag CHF', 'type': 'amountChf'}
             ]
         }
-        writeConfig('input', configData)
+        writeConfig(configData, 'input')
         
         # act
         with patch.object(sys, 'argv', ['onecreditcard', str(inputDir)]):
@@ -184,6 +155,42 @@ class TestMain:
         inputDir = setupInputDir(['2025-07_1.txt'])
         
         # act (no config file created)
+        with patch.object(sys, 'argv', ['onecreditcard', str(inputDir)]):
+            result = main()
+        
+        # assert
+        assert result == 1
+
+    def test_main_emptyDirectory_warning(self, tmp_path, writeConfig):
+        # arrange
+        inputDir = tmp_path / 'input'
+        inputDir.mkdir()
+        
+        configData = {
+            'creditAccount': '2000',
+            'mapping': {},
+            'columns': [
+                {'name': 'Datum', 'type': 'date', 'format': 'DD.MM.YY'},
+                {'name': 'Text', 'type': 'description'}
+            ]
+        }
+        writeConfig(configData, 'input')
+        
+        # act
+        with patch.object(sys, 'argv', ['onecreditcard', str(inputDir)]):
+            result = main()
+        
+        # assert
+        assert result == 0
+
+    def test_main_invalidJsonConfig_error(self, setupInputDir, tmp_path):
+        # arrange
+        inputDir = setupInputDir(['2025-07_1.txt'])
+        
+        configPath = inputDir / 'onecreditcard.json'
+        configPath.write_text('{ invalid json }')
+        
+        # act
         with patch.object(sys, 'argv', ['onecreditcard', str(inputDir)]):
             result = main()
         
