@@ -33,10 +33,16 @@ onecreditcard --help
 python src/main.py
 
 # Specify custom data folder and month
-python src/main.py --data-folder /path/to/exports --month 2025-07
+python src/main.py --folder /path/to/exports --month 2025-07
 
 # Use custom configuration file
 python src/main.py --config custom-config.json
+
+# Enable debug logging
+python src/main.py --log-level DEBUG
+
+# Write logs to custom file
+python src/main.py --log-file /var/log/onecreditcard.log
 ```
 
 ### Parameters
@@ -47,11 +53,17 @@ python src/main.py --config custom-config.json
 - **--month, -m**: Processing month in YYYY-MM format (default: previous month)
   - Filters transactions to specified month only
   - Used for output filename generation
-- **--config, -c**: Configuration file path (default: {data_folder}/onecreditcard.json)
+- **--config, -c**: Configuration file path (default: {folder}/onecreditcard.json)
   - Contains account mapping rules and transaction categorization
   - Defines output format: column names, positions, and data formats
   - Processing settings and preferences
   - JSON format (see [Configuration Format](doc/technical/03-configuration-format.md))
+- **--log-level**: Logging level (default: INFO)
+  - Choices: DEBUG, INFO, WARNING, ERROR
+  - Controls verbosity of console and log file output
+- **--log-file**: Log file path (default: onecreditcard.log in current directory)
+  - File where detailed logs are written
+  - Console always shows INFO and above
 
 ## Features
 

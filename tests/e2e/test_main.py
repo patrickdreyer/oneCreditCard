@@ -197,3 +197,28 @@ class TestMain:
         # assert
         assert result == 1
 
+    def test_main_monthFilter_onlyTargetMonthProcessed(self, setupInputDir, writeConfig):
+        # arrange
+        inputDir = setupInputDir(['2025-07_1.txt', '2025-08_1.txt', '2025-09_1.txt'])
+
+        configData = {
+            'creditAccount': '2000',
+            'mapping': {},
+            'columns': [
+                {'name': 'Datum', 'type': 'date', 'format': 'DD.MM.YY'},
+                {'name': 'Text', 'type': 'description'},
+                {'name': 'Betrag CHF', 'type': 'amountChf'}
+            ]
+        }
+        writeConfig(configData, 'input')
+
+        outputFile = inputDir / 'bookings.ods'
+
+        # act
+        with patch.object(sys, 'argv', ['onecreditcard', '--folder', str(inputDir), '--month', '2025-08']):
+            result = main()
+
+        # assert
+        assert result == 0
+        assert outputFile.exists()
+

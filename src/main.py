@@ -20,39 +20,39 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 Examples:
-  # Process all .txt files in current directory
-  onecreditcard .
+  # Process credit card exports in current directory
+  onecreditcard
 
-  # Process files with custom output path
-  onecreditcard input/ output/2025-12-bookings.ods
+  # Specify custom data folder and month
+  onecreditcard --folder /path/to/exports --month 2025-07
 
   # Use custom config file
-  onecreditcard input/ -c custom-config.json
+  onecreditcard --config custom-config.json
 
   # Enable debug logging
-  onecreditcard input/ --log-level DEBUG
+  onecreditcard --log-level DEBUG
         '''
     )
 
     parser.add_argument(
-        'input_directory',
+        '--folder', '-f',
         type=Path,
-        help='Directory containing .txt credit card export files'
+        default=Path.cwd(),
+        help='Data folder path (default: current working directory)'
     )
 
     parser.add_argument(
-        'output_file',
-        type=Path,
-        nargs='?',
+        '--month', '-m',
+        type=str,
         default=None,
-        help='Output ODS file path (default: bookings.ods in input directory)'
+        help='Processing month in YYYY-MM format (default: previous month)'
     )
 
     parser.add_argument(
-        '-c', '--config',
+        '--config', '-c',
         type=Path,
         default=None,
-        help='Configuration file path (default: onecreditcard.json in input directory)'
+        help='Configuration file path (default: {folder}/onecreditcard.json)'
     )
 
     parser.add_argument(
@@ -76,39 +76,41 @@ Examples:
     setupLogging(args.log_level, logFile)
 
     try:
-        # Validate input directory
-        if not args.input_directory.exists():
-            logger.error("Input directory not found; path='%s'", args.input_directory)
-            print(f"Error: Input directory not found: {args.input_directory}", file=sys.stderr)
+        # Validate folder
+        folder = args.folder
+        if not folder.exists():
+            logger.error("Folder not found; path='%s'", folder)
+            print(f"Error: Folder not found: {folder}", file=sys.stderr)
             return 1
 
-        if not args.input_directory.is_dir():
-            logger.error("Input path is not a directory; path='%s'", args.input_directory)
-            print(f"Error: Input path is not a directory: {args.input_directory}", file=sys.stderr)
+        if not folder.is_dir():
+            logger.error("Path is not a directory; path='%s'", folder)
+            print(f"Error: Path is not a directory: {folder}", file=sys.stderr)
             return 1
 
         # Determine output file path
-        outputFile = args.output_file or (args.input_directory / 'bookings.ods')
+        # TODO: implement month filtering with args.month
+        outputFile = folder / 'bookings.ods'
 
         # Load configuration
-        configPath = args.config or (args.input_directory / 'onecreditcard.json')
+        configPath = args.config or (folder / 'onecreditcard.json')
         if not configPath.exists():
             logger.error("Configuration file not found; path='%s'", configPath)
             print(f"Error: Configuration file not found: {configPath}", file=sys.stderr)
             return 1
 
-        logger.info("Starting processing; input_dir='%s', output_file='%s', config='%s'",
-                   args.input_directory, outputFile, configPath)
+        logger.info("Starting processing; folder='%s', output_file='%s', config='%s'",
+                   folder, outputFile, configPath)
 
         config = Configuration(configPath)
 
         # Parse transactions from directory
-        parser = DirectoryParser()
-        transactions = list(parser.parse(args.input_directory))
+        directoryParser = DirectoryParser()
+        transactions = list(directoryParser.parse(folder))
 
         if not transactions:
-            logger.warning("No transactions found in directory; path='%s'", args.input_directory)
-            print(f"Warning: No transactions found in {args.input_directory}", file=sys.stderr)
+            logger.warning("No transactions found in folder; path='%s'", folder)
+            print(f"Warning: No transactions found in {folder}", file=sys.stderr)
             return 0
 
         # Group transactions
