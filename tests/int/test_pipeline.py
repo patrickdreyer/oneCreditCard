@@ -8,7 +8,7 @@ from odsGenerator import OdsGenerator
 
 
 class TestPipeline:
-    def test_pipeline_onlyIgnoredTransactions_emptyEntries(self, setupInputDir, writeConfig, tmp_path: Path):
+    def test_pipeline_onlyIgnoredTransactions_emptyEntries(self, setupInputDir, writeConfig):
         # arrange
         inputDir = setupInputDir(['2025-08_1.txt'])
 
@@ -29,7 +29,7 @@ class TestPipeline:
         parser = DirectoryParser()
         grouper = TransactionGrouper(config)
         mapper = AccountMapper(config)
-        
+
         # act
         transactions = list(parser.parse(inputDir))
         individualTransactions, groups = grouper.group(iter(transactions))
@@ -39,7 +39,7 @@ class TestPipeline:
         # assert
         assert len(entries) == 0
 
-    def test_pipeline_onlyGroupedTransactions_groupedEntries(self, setupInputDir, writeConfig, tmp_path: Path):
+    def test_pipeline_onlyGroupedTransactions_groupedEntries(self, setupInputDir, writeConfig):
         # arrange
         inputDir = setupInputDir(['2025-08_1.txt'])
 
@@ -81,7 +81,7 @@ class TestPipeline:
         parser = DirectoryParser()
         grouper = TransactionGrouper(config)
         mapper = AccountMapper(config)
-        
+
         # act
         transactions = list(parser.parse(inputDir))
         individualTransactions, groups = grouper.group(iter(transactions))
@@ -94,10 +94,10 @@ class TestPipeline:
         assert len(entries) == len(groups)
         assert all(entry.group is not None for entry in entries)
 
-    def test_pipeline_fullWorkflow_odsGenerated(self, setupInputDir, writeConfig, tmp_path: Path):
+    def test_pipeline_fullWorkflow_odsGenerated(self, setupInputDir, writeConfig, tmp_path: Path):  # pylint: disable=too-many-locals
         # arrange
         inputDir = setupInputDir(['2025-07_1.txt', '2025-07_2.txt'])
-        
+
         configData = {
             'creditAccount': '2000',
             'mapping': {
@@ -115,21 +115,21 @@ class TestPipeline:
             ]
         }
         configPath = writeConfig(configData, 'input')
-        
+
         config = Configuration(configPath)
         parser = DirectoryParser()
         grouper = TransactionGrouper(config)
         mapper = AccountMapper(config)
         generator = OdsGenerator(config)
         outputFile = tmp_path / 'output.ods'
-        
+
         # act
         transactions = list(parser.parse(inputDir))
         individualTransactions, groups = grouper.group(iter(transactions))
         entries = list(mapper.mapTransactions(individualTransactions))
         entries.extend(list(mapper.mapGroups(groups)))
         generator.generate(entries, outputFile)
-        
+
         # assert
         assert outputFile.exists()
         assert len(entries) > 0

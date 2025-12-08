@@ -176,8 +176,8 @@ class TestConfigurationProperties:
         ignoreRules = testee.ignoreRules
 
         # assert
-        assert ignoreRules.categories == []
-        assert ignoreRules.transactions == []
+        assert not ignoreRules.categories
+        assert not ignoreRules.transactions
 
     def test_mappingRules_validConfig_mappingRuleObjects(self, validConfig):
         # act
