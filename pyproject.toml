@@ -47,6 +47,11 @@ disable = [
     "W4901",  # deprecated-module (false positive for our parser package)
 ]
 
+[tool.pylint.'tests.*']
+disable = [
+    "R0801",  # duplicate-code (test fixtures naturally have similar config data)
+]
+
 [tool.pylint.MASTER]
 init-hook = "import sys; sys.path.insert(0, 'src')"
 

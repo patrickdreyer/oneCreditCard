@@ -183,7 +183,7 @@ class TestMain:
         # assert
         assert result == 0
 
-    def test_main_invalidJsonConfig_error(self, setupInputDir, tmp_path):
+    def test_main_invalidJsonConfig_error(self, setupInputDir):
         # arrange
         inputDir = setupInputDir(['2025-07_1.txt'])
 
@@ -221,4 +221,3 @@ class TestMain:
         # assert
         assert result == 0
         assert outputFile.exists()
-

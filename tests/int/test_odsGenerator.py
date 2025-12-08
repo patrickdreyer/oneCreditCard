@@ -45,7 +45,7 @@ class TestOdsGenerator:
         doc = load(str(outputPath))
         tables = doc.spreadsheet.getElementsByType(Table)
         assert len(tables) == 1
-        
+
         rows = tables[0].getElementsByType(TableRow)
         assert len(rows) == 2  # Header + 1 data row
 
@@ -62,12 +62,12 @@ class TestOdsGenerator:
         doc = load(str(outputPath))
         tables = doc.spreadsheet.getElementsByType(Table)
         rows = tables[0].getElementsByType(TableRow)
-        
+
         # Check data row
         dataRow = rows[1]
         cells = dataRow.getElementsByType(TableCell)
         assert len(cells) == 6
-        
+
         # Extract cell values
         values = [self.__getCellText(cell) for cell in cells]
         assert values[0] == "15.07.25"  # Date
@@ -93,7 +93,7 @@ class TestOdsGenerator:
         dataRow = rows[1]
         cells = dataRow.getElementsByType(TableCell)
         values = [self.__getCellText(cell) for cell in cells]
-        
+
         assert values[5] == "EUR 297.00"  # Remarks with foreign currency
 
     def test_generate_groupedTransactions_monthEndDate(self):
@@ -112,7 +112,7 @@ class TestOdsGenerator:
         dataRow = rows[1]
         cells = dataRow.getElementsByType(TableCell)
         values = [self.__getCellText(cell) for cell in cells]
-        
+
         assert values[0] == "31.07.25"  # Month end date
         assert values[4] == "100.50"  # Total amount
 
@@ -132,7 +132,7 @@ class TestOdsGenerator:
         dataRow = rows[1]
         cells = dataRow.getElementsByType(TableCell)
         values = [self.__getCellText(cell) for cell in cells]
-        
+
         assert values[2] == ""  # Empty debit account
 
     def test_generate_multipleEntries_multipleRows(self):
@@ -168,7 +168,7 @@ class TestOdsGenerator:
         }
         config = Configuration(writeConfig(configData))
         testee = OdsGenerator(config)
-        
+
         transaction = Transaction("Food", "Restaurant", datetime(2025, 7, 15), None, None, 25.50)
         entries = [BookingEntry("Verpflegung", "5821", "2110", transaction=transaction)]
         outputPath = self.outputDir / "optional.ods"
@@ -183,7 +183,7 @@ class TestOdsGenerator:
         dataRow = rows[1]
         cells = dataRow.getElementsByType(TableCell)
         values = [self.__getCellText(cell) for cell in cells]
-        
+
         assert values[2] == ""  # Optional Saldo column
         assert values[3] == ""  # Optional KS1 column
 
