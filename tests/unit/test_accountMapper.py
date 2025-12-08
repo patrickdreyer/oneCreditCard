@@ -1,10 +1,10 @@
 from datetime import datetime
 import pytest
 
-from src.accountMapper import AccountMapper
-from src.configuration import Configuration
-from src.parser.transaction import Transaction
-from src.transactionGrouper import Group
+from accountMapper import AccountMapper
+from configuration import Configuration
+from parsers.transaction import Transaction
+from transactionGrouper import Group
 
 
 class TestAccountMapper:

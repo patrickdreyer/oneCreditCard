@@ -1,7 +1,7 @@
 from datetime import datetime
 import pytest
 
-from src.parser import Transaction
+from parsers import Transaction
 
 
 class TestTransaction:

@@ -5,9 +5,9 @@ from odf.opendocument import OpenDocumentSpreadsheet
 from odf.table import Table, TableRow, TableCell
 from odf.text import P
 
-from src.accountMapper import BookingEntry
-from src.configuration import Configuration, ColumnConfig
-from src.logging_config import getLogger
+from accountMapper import BookingEntry
+from configuration import Configuration, ColumnConfig
+from logging_config import getLogger
 
 logger = getLogger(__name__)
 
@@ -18,7 +18,7 @@ class OdsGenerator:
 
     def generate(self, entries: List[BookingEntry], outputPath: Path) -> None:
         logger.info("Starting ODS generation; output_path='%s', entries=%d", outputPath, len(entries))
-        
+
         try:
             doc = OpenDocumentSpreadsheet()
 
@@ -32,7 +32,7 @@ class OdsGenerator:
 
             doc.spreadsheet.addElement(table)
             doc.save(str(outputPath))
-            
+
             logger.info("ODS generation completed; output_path='%s', rows=%d", outputPath, len(entries))
         except Exception as exc:
             logger.error("ODS generation failed; output_path='%s', error='%s'", outputPath, exc)
@@ -61,21 +61,21 @@ class OdsGenerator:
     def __getCellValue(self, column: ColumnConfig, entry: BookingEntry) -> str:
         if not column.type:
             # Optional column - check for remarks
-            if column.name == "Bemerkungen" or column.name == "Bemerkung":
+            if column.name in ("Bemerkungen", "Bemerkung"):
                 return self.__getRemarksValue(entry)
             return ""
 
         if column.type == "date":
             return self.__formatDate(entry, column.format)
-        elif column.type == "description":
+        if column.type == "description":
             return entry.mappedDescription
-        elif column.type == "debitAccount":
+        if column.type == "debitAccount":
             return entry.debitAccount or ""
-        elif column.type == "creditAccount":
+        if column.type == "creditAccount":
             return entry.creditAccount
-        elif column.type == "amountChf":
+        if column.type == "amountChf":
             return self.__formatAmount(entry)
-        elif column.type == "remarks":
+        if column.type == "remarks":
             return self.__getRemarksValue(entry)
 
         return ""
@@ -91,10 +91,9 @@ class OdsGenerator:
         # Convert DD.MM.YY format to Python strftime format
         if dateFormat == "DD.MM.YY":
             return date.strftime("%d.%m.%y")
-        elif dateFormat == "DD.MM.YYYY":
+        if dateFormat == "DD.MM.YYYY":
             return date.strftime("%d.%m.%Y")
-        else:
-            return date.strftime("%d.%m.%y")
+        return date.strftime("%d.%m.%y")
 
     def __formatAmount(self, entry: BookingEntry) -> str:
         if entry.transaction:

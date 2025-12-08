@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from src.parser import TextParser
+from parsers import TextParser
 
 
 class TestTextParser:

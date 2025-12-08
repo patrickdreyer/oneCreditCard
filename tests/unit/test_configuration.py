@@ -1,5 +1,5 @@
 import pytest
-from src.configuration import Configuration, ColumnConfig, MappingRule, IgnoreRules
+from configuration import Configuration, ColumnConfig, MappingRule, IgnoreRules
 
 
 class TestConfiguration:

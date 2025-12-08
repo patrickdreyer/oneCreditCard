@@ -1,6 +1,6 @@
 import pytest
 
-from src.parser import DirectoryParser
+from parsers import DirectoryParser
 
 
 class TestDirectoryParser:

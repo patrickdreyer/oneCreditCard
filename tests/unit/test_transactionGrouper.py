@@ -1,9 +1,9 @@
 from datetime import datetime
 import pytest
 
-from src.configuration import Configuration
-from src.transactionGrouper import TransactionGrouper
-from src.parser.transaction import Transaction
+from configuration import Configuration
+from transactionGrouper import TransactionGrouper
+from parsers.transaction import Transaction
 
 
 class TestTransactionGrouper:

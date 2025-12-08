@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import pytest
 
-from src.main import main
+from main import main
 
 
 class TestMain:
