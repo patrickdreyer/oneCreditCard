@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 
-def setupLogging(logLevel: str = "INFO", logFile: Path = None) -> None:
+def setupLogging(logLevel: str = "INFO", logFile: Path = Path('onecreditcard.log')) -> None:
     # Configure logging with console and optional file output
     level = getattr(logging, logLevel.upper(), logging.INFO)
 
