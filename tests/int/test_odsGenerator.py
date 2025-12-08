@@ -5,11 +5,11 @@ from odf.opendocument import load
 from odf.table import Table, TableRow, TableCell
 from odf.text import P
 
-from src.odsGenerator import OdsGenerator
-from src.accountMapper import BookingEntry
-from src.configuration import Configuration
-from src.parser.transaction import Transaction
-from src.transactionGrouper import Group
+from odsGenerator import OdsGenerator
+from accountMapper import BookingEntry
+from configuration import Configuration
+from parsers.transaction import Transaction
+from transactionGrouper import Group
 
 
 class TestOdsGenerator:

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from src.logging_config import getLogger
+from logging_config import getLogger
 
 logger = getLogger(__name__)
 
@@ -48,9 +48,9 @@ class Configuration:
         except json.JSONDecodeError as exc:
             logger.error("Invalid JSON in configuration file; path='%s', error='%s'", self.configPath, exc)
             raise ValueError(f"Invalid JSON in configuration file: {exc}") from exc
-        
-        logger.info("Configuration loaded; path='%s', mapping_rules=%d, columns=%d", 
-                    self.configPath, len(self._config.get('mapping', {})), 
+
+        logger.info("Configuration loaded; path='%s', mapping_rules=%d, columns=%d",
+                    self.configPath, len(self._config.get('mapping', {})),
                     len(self._config.get('columns', [])))
 
     def __validateConfiguration(self) -> None:
@@ -73,7 +73,7 @@ class Configuration:
                 logger.error("Invalid mapping rule type; category='%s', type='%s'", category, type(rule).__name__)
                 raise ValueError(f"Mapping rule for '{category}' must be an object")
             if 'description' not in rule or 'debitAccount' not in rule:
-                logger.error("Missing required mapping rule fields; category='%s', has_description=%s, has_debitAccount=%s", 
+                logger.error("Missing required mapping rule fields; category='%s', has_description=%s, has_debitAccount=%s",
                             category, 'description' in rule, 'debitAccount' in rule)
                 raise ValueError(f"Mapping rule for '{category}' must have description and debitAccount")
             if 'pattern' in rule:

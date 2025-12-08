@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from src.configuration import Configuration
-from src.parser.directoryParser import DirectoryParser
-from src.transactionGrouper import TransactionGrouper
-from src.accountMapper import AccountMapper
-from src.odsGenerator import OdsGenerator
+from configuration import Configuration
+from parsers.directoryParser import DirectoryParser
+from transactionGrouper import TransactionGrouper
+from accountMapper import AccountMapper
+from odsGenerator import OdsGenerator
 
 
 class TestPipeline:

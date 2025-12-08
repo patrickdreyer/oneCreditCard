@@ -2,10 +2,10 @@ import re
 from dataclasses import dataclass
 from typing import Iterator, List, Optional
 
-from src.parser.transaction import Transaction
-from src.configuration import Configuration, MappingRule
-from src.transactionGrouper import Group
-from src.logging_config import getLogger
+from parsers.transaction import Transaction
+from configuration import Configuration, MappingRule
+from transactionGrouper import Group
+from logging_config import getLogger
 
 logger = getLogger(__name__)
 
@@ -28,11 +28,11 @@ class AccountMapper:
         mappedCount = 0
         unmappedCount = 0
         ignoredCount = 0
-        
+
         for transaction in transactions:
             if self.__ignored(transaction):
                 ignoredCount += 1
-                logger.debug("Transaction ignored; merchant='%s', category='%s'", 
+                logger.debug("Transaction ignored; merchant='%s', category='%s'",
                             transaction.merchant, transaction.category)
                 continue
 
@@ -41,7 +41,7 @@ class AccountMapper:
                 # Create mapped transaction with mapping information
                 mappedCount += 1
                 logger.debug("Transaction mapped; merchant='%s', category='%s', description='%s', debitAccount='%s'",
-                            transaction.merchant, transaction.category, 
+                            transaction.merchant, transaction.category,
                             mappingRule.description, mappingRule.debitAccount)
                 yield BookingEntry(
                     mappedDescription=mappingRule.description,
@@ -60,7 +60,7 @@ class AccountMapper:
                     creditAccount=self.configuration.creditAccount,
                     transaction=transaction
                 )
-        
+
         logger.info("Transactions mapped; total=%d, mapped=%d, unmapped=%d, ignored=%d",
                    len(transactions), mappedCount, unmappedCount, ignoredCount)
 
@@ -68,13 +68,13 @@ class AccountMapper:
         # Map grouped transactions
         mappedCount = 0
         unmappedCount = 0
-        
+
         for group in groups:
             mappingRule = self.__findMappingRuleByCategory(group.category)
             if mappingRule:
                 mappedCount += 1
                 logger.debug("Group mapped; category='%s', description='%s', debitAccount='%s', transactions=%d",
-                            group.category, mappingRule.description, 
+                            group.category, mappingRule.description,
                             mappingRule.debitAccount, len(group.transactions))
                 yield BookingEntry(
                     mappedDescription=mappingRule.description,
@@ -93,7 +93,7 @@ class AccountMapper:
                     creditAccount=self.configuration.creditAccount,
                     group=group
                 )
-        
+
         logger.info("Groups mapped; total=%d, mapped=%d, unmapped=%d",
                    len(groups), mappedCount, unmappedCount)
 
@@ -124,9 +124,8 @@ class AccountMapper:
                     return rule
                 # Pattern exists but doesn't match merchant, no mapping
                 return None
-            else:
-                # No pattern, direct category match
-                return rule
+            # No pattern, direct category match
+            return rule
 
         # No direct category match, check pattern matching for all rules
         for rule in mappingRules.values():

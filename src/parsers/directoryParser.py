@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Iterator
 
-from src.logging_config import getLogger
+from logging_config import getLogger
 from .textParser import TextParser
 from .transaction import Transaction
 
@@ -24,7 +24,7 @@ class DirectoryParser:
         logger.info("Parsing directory; path='%s', pattern='%s'", directoryPath, filePattern)
         fileCount = 0
         transactionCount = 0
-        
+
         for file in directory.glob(filePattern):
             try:
                 fileCount += 1
@@ -37,7 +37,7 @@ class DirectoryParser:
             except Exception as e:
                 logger.error("Error parsing file; path='%s', error='%s'", file, str(e))
                 raise RuntimeError(f"Error parsing file {file}: {e}") from e
-        
+
         logger.info("Directory parsing complete; files=%d, transactions=%d", fileCount, transactionCount)
 
     def __parseFile(self, filePath: str) -> Iterator[Transaction]:

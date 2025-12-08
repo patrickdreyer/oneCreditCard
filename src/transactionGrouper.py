@@ -4,9 +4,9 @@ from datetime import datetime
 import re
 from typing import Iterator, List, Tuple
 
-from src.configuration import Configuration
-from src.parser.transaction import Transaction
-from src.logging_config import getLogger
+from configuration import Configuration
+from logging_config import getLogger
+from parsers.transaction import Transaction
 
 logger = getLogger(__name__)
 
@@ -55,7 +55,7 @@ class TransactionGrouper:
             )
             logger.debug("Group created; category='%s', transactions=%d, totalAmount=%.2f",
                         category, len(categoryTransactions), totalAmount)
-        
+
         return individual, groups
 
     def __canGroup(self, transaction: Transaction) -> bool:

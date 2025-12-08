@@ -42,6 +42,8 @@ disable = [
     "C0116",  # missing-function-docstring
     "C0301",  # line-too-long
     "R0903",  # too-few-public-methods
+    "R0911",  # too-many-return-statements
+    "W0718",  # broad-exception-caught
     "W4901",  # deprecated-module (false positive for our parser package)
 ]
 
