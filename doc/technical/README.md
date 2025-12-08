@@ -15,3 +15,4 @@ Implementation details for the oneCreditCard tool.
 - **[Configuration Format](03-configuration-format.md)** - Configuration format comparison and decision
 - **[Test Strategy](04-test-strategy.md)** - Honeycomb + Component testing approach and implementation
 - **[Code Organization](05-code-organization.md)** - Project structure, modules, and file organization
+- **[Executable Build](06-executable-build.md)** - PyInstaller implementation for standalone executable creation

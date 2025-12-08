@@ -9,10 +9,21 @@ A Python tool that processes Viseca credit card text exports and converts them i
 
 ### Installation
 
+#### System-Wide
+
 ```bash
-git clone https://github.com/patrickdreyer/oneCreditCard.git
-cd oneCreditCard
-pip install -r requirements.txt
+sudo cp dist/onecreditcard /usr/local/bin/
+onecreditcard --help
+```
+
+#### User-Local
+
+```bash
+mkdir -p ~/.local/bin
+cp dist/onecreditcard ~/.local/bin/
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+onecreditcard --help
 ```
 
 ### Basic Usage
