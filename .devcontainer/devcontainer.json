@@ -25,7 +25,9 @@
                 "yzhang.markdown-all-in-one",
                 "davidanson.vscode-markdownlint",
                 // JSON & Configuration
-                "ms-vscode.vscode-json"
+                "ms-vscode.vscode-json",
+                // GitHub
+                "GitHub.vscode-pull-request-github"
             ],
             "settings": {
                 "python.defaultInterpreterPath": "/usr/local/bin/python",
@@ -47,7 +49,7 @@
     "mounts": [
         "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached"
     ],
-    "postCreateCommand": "pip install -r requirements.txt && echo && echo '╔══════════════════════════════════════════════════════════════╗' && echo '║                     🤖 AI CONTEXT REMINDER                   ║' && echo '║                                                              ║' && echo '║  Type in AI Chat: load AGENTS.md                             ║' && echo '║                                                              ║' && echo '║  This loads the complete project context for better AI       ║' && echo '║  assistance with oneCreditCard development.                  ║' && echo '╚══════════════════════════════════════════════════════════════╝' && echo",
+    "postCreateCommand": "(type -p wget >/dev/null || (sudo apt-get update && sudo apt-get install wget -y)) && sudo mkdir -p -m 755 /etc/apt/keyrings && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg && echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main\" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && sudo apt-get update && sudo apt-get install gh -y && pip install -r requirements.txt && echo && echo '╔══════════════════════════════════════════════════════════════╗' && echo '║                     🤖 AI CONTEXT REMINDER                   ║' && echo '║                                                              ║' && echo '║  Type in AI Chat: load AGENTS.md                             ║' && echo '║                                                              ║' && echo '║  This loads the complete project context for better AI       ║' && echo '║  assistance with oneCreditCard development.                  ║' && echo '╚══════════════════════════════════════════════════════════════╝' && echo",
     "remoteUser": "vscode",
     "updateRemoteUserUID": true
 }
