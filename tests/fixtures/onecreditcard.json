@@ -14,10 +14,17 @@
       "description": "Öffentlicher Verkehr",
       "debitAccount": "6282"
     },
-    "Fahrzeug": {
-      "description": "Auto; Diesel",
-      "debitAccount": "6210"
-    },
+    "Fahrzeug": [
+      {
+        "pattern": ".*Tankstelle.*",
+        "description": "Auto; Diesel",
+        "debitAccount": "6210"
+      },
+      {
+        "description": "Auto; Sonstiges",
+        "debitAccount": "6220"
+      }
+    ],
     "Online Shopping": {
       "pattern": ".*(Amazon|eBay|Zalando).*",
       "description": "Online Einkäufe",

@@ -70,7 +70,7 @@ class AccountMapper:
         unmappedCount = 0
 
         for group in groups:
-            mappingRule = self.__findMappingRuleByCategory(group.category)
+            mappingRule = group.mappingRule or self.__findMappingRuleByCategory(group.category)
             if mappingRule:
                 mappedCount += 1
                 logger.debug("Group mapped; category='%s', description='%s', debitAccount='%s', transactions=%d",
@@ -115,28 +115,35 @@ class AccountMapper:
     def __findMappingRule(self, transaction: Transaction) -> Optional[MappingRule]:
         mappingRules = self.configuration.mappingRules
 
-        # Direct category match
+        # Direct category match: check patterns first, then fall back to catch-all
         if transaction.category in mappingRules:
-            rule = mappingRules[transaction.category]
-            # If rule has pattern, check if merchant matches the pattern
-            if rule.pattern:
-                if self.__matchesPattern(transaction.merchant, rule.pattern):
-                    return rule
-                # Pattern exists but doesn't match merchant, no mapping
-                return None
-            # No pattern, direct category match
-            return rule
+            catchAll: Optional[MappingRule] = None
+            for rule in mappingRules[transaction.category]:
+                if rule.pattern:
+                    if self.__matchesPattern(transaction.merchant, rule.pattern):
+                        return rule
+                elif catchAll is None:
+                    catchAll = rule
+            return catchAll
 
         # No direct category match, check pattern matching for all rules
-        for rule in mappingRules.values():
-            if rule.pattern and self.__matchesPattern(transaction.merchant, rule.pattern):
-                return rule
+        for rules in mappingRules.values():
+            for rule in rules:
+                if rule.pattern and self.__matchesPattern(transaction.merchant, rule.pattern):
+                    return rule
 
         return None
 
     def __findMappingRuleByCategory(self, category: str) -> Optional[MappingRule]:
         mappingRules = self.configuration.mappingRules
-        return mappingRules.get(category)
+        rules = mappingRules.get(category)
+        if not rules:
+            return None
+        # Return the catch-all rule (no pattern) if available
+        for rule in rules:
+            if not rule.pattern:
+                return rule
+        return None
 
     def __matchesPattern(self, text: str, pattern: str) -> bool:
         return re.search(pattern, text, re.IGNORECASE) is not None

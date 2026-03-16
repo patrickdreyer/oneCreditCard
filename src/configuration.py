@@ -2,7 +2,7 @@ import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from logging_config import getLogger
 
@@ -68,7 +68,24 @@ class Configuration:
             logger.error("Invalid mapping type; type='%s'", type(self._config['mapping']).__name__)
             raise ValueError("mapping must be an object")
 
-        for category, rule in self._config['mapping'].items():
+        for category, ruleOrRules in self._config['mapping'].items():
+            self.__validateMappingEntry(category, ruleOrRules)
+
+        if not isinstance(self._config['columns'], list):
+            logger.error("Invalid columns type; type='%s'", type(self._config['columns']).__name__)
+            raise ValueError("columns must be an array")
+
+        ignoreConfig = self._config.get('ignore', {})
+        if 'transactions' in ignoreConfig:
+            for pattern in ignoreConfig['transactions']:
+                self.__validatePattern(pattern, "ignore transaction pattern")
+
+    def __validateMappingEntry(self, category: str, ruleOrRules) -> None:
+        ruleList: List[dict] = ruleOrRules if isinstance(ruleOrRules, list) else [ruleOrRules]
+        if not ruleList:
+            logger.error("Empty mapping rules list; category='%s'", category)
+            raise ValueError(f"Mapping rules for '{category}' must not be empty")
+        for rule in ruleList:
             if not isinstance(rule, dict):
                 logger.error("Invalid mapping rule type; category='%s', type='%s'", category, type(rule).__name__)
                 raise ValueError(f"Mapping rule for '{category}' must be an object")
@@ -109,14 +126,18 @@ class Configuration:
         )
 
     @property
-    def mappingRules(self) -> Dict[str, MappingRule]:
-        rules = {}
-        for category, ruleConfig in self._config['mapping'].items():
-            rules[category] = MappingRule(
-                description=ruleConfig['description'],
-                debitAccount=ruleConfig['debitAccount'],
-                pattern=ruleConfig.get('pattern')
-            )
+    def mappingRules(self) -> Dict[str, List[MappingRule]]:
+        rules: Dict[str, List[MappingRule]] = {}
+        for category, ruleOrRules in self._config['mapping'].items():
+            ruleList: Union[List[dict], dict] = ruleOrRules if isinstance(ruleOrRules, list) else [ruleOrRules]
+            rules[category] = [
+                MappingRule(
+                    description=r['description'],
+                    debitAccount=r['debitAccount'],
+                    pattern=r.get('pattern')
+                )
+                for r in ruleList
+            ]
         return rules
 
     @property

@@ -116,6 +116,57 @@ class TestConfiguration:
         with pytest.raises(ValueError, match="Invalid regex pattern in ignore transaction pattern"):
             Configuration(filePath)
 
+    def test_ctor_multiRuleList_loaded(self, writeConfig):
+        # arrange
+        filePath = writeConfig({
+            "creditAccount": "2110",
+            "mapping": {
+                "Fahrzeug": [
+                    {"pattern": ".*Tankstelle.*", "description": "Auto; Diesel", "debitAccount": "6210"},
+                    {"description": "Auto; Sonstiges", "debitAccount": "6220"}
+                ]
+            },
+            "columns": []
+        })
+
+        # act
+        testee = Configuration(filePath)
+
+        # assert
+        rules = testee.mappingRules
+        assert len(rules) == 1
+        assert len(rules["Fahrzeug"]) == 2
+        assert rules["Fahrzeug"][0].debitAccount == "6210"
+        assert rules["Fahrzeug"][1].debitAccount == "6220"
+
+    def test_ctor_emptyMultiRuleList_error(self, writeConfig):
+        # arrange
+        filePath = writeConfig({
+            "creditAccount": "2110",
+            "mapping": {"Fahrzeug": []},
+            "columns": []
+        })
+
+        # act & assert
+        with pytest.raises(ValueError, match="must not be empty"):
+            Configuration(filePath)
+
+    def test_ctor_invalidPatternInMultiRuleList_error(self, writeConfig):
+        # arrange
+        filePath = writeConfig({
+            "creditAccount": "2110",
+            "mapping": {
+                "Fahrzeug": [
+                    {"pattern": "[bad", "description": "Auto; Diesel", "debitAccount": "6210"}
+                ]
+            },
+            "columns": []
+        })
+
+        # act & assert
+        with pytest.raises(ValueError, match="Invalid regex pattern in mapping rule"):
+            Configuration(filePath)
+
 
 class TestConfigurationProperties:
     @pytest.fixture
@@ -186,13 +237,16 @@ class TestConfigurationProperties:
         # assert
         assert len(rules) == 2
 
-        foodRule = rules["Food"]
+        foodRules = rules["Food"]
+        assert isinstance(foodRules, list)
+        assert len(foodRules) == 1
+        foodRule = foodRules[0]
         assert isinstance(foodRule, MappingRule)
         assert foodRule.description == "Meals"
         assert foodRule.debitAccount == "5821"
         assert foodRule.pattern is None
 
-        transportRule = rules["Transport"]
+        transportRule = rules["Transport"][0]
         assert transportRule.pattern == "^SBB.*"
 
     def test_columns_validConfig_columnConfigObjects(self, validConfig):

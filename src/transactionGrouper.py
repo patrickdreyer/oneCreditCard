@@ -1,10 +1,10 @@
 from calendar import monthrange
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 import re
-from typing import Iterator, List, Tuple
+from typing import Dict, Iterator, List, Optional, Tuple
 
-from configuration import Configuration
+from configuration import Configuration, MappingRule
 from logging_config import getLogger
 from parsers.transaction import Transaction
 
@@ -18,6 +18,7 @@ class Group:
     transactionCount: int
     monthEndDate: datetime
     transactions: List[Transaction]
+    mappingRule: Optional[MappingRule] = field(default=None)
 
 
 class TransactionGrouper:
@@ -25,23 +26,27 @@ class TransactionGrouper:
         self.configuration = configuration
 
     def group(self, transactions: Iterator[Transaction]) -> Tuple[List[Transaction], List[Group]]:
-        toBeGrouped = {}
+        # key: (category, debitAccount) to separate groups for different rules in the same category
+        toBeGrouped: Dict[Tuple[str, str], Dict] = {}
         individual = []
         for transaction in transactions:
-            if self.__canGroup(transaction):
-                category = transaction.category
-                if category not in toBeGrouped:
-                    toBeGrouped[category] = []
-                toBeGrouped[category].append(transaction)
-                logger.debug("Transaction added to group; merchant='%s', category='%s'",
-                            transaction.merchant, category)
+            rule = self.__findMatchingRule(transaction)
+            if rule:
+                key = (transaction.category, rule.debitAccount)
+                if key not in toBeGrouped:
+                    toBeGrouped[key] = {'rule': rule, 'transactions': []}
+                toBeGrouped[key]['transactions'].append(transaction)
+                logger.debug("Transaction added to group; merchant='%s', category='%s', debitAccount='%s'",
+                            transaction.merchant, transaction.category, rule.debitAccount)
             else:
                 individual.append(transaction)
                 logger.debug("Transaction kept individual; merchant='%s', category='%s'",
                             transaction.merchant, transaction.category)
 
         groups = []
-        for category, categoryTransactions in toBeGrouped.items():
+        for (category, _), entry in toBeGrouped.items():
+            rule = entry['rule']
+            categoryTransactions = entry['transactions']
             totalAmount = sum(t.amount for t in categoryTransactions)
             monthEndDate = self.__getMonthEndDate(categoryTransactions[0].date)
             groups.append(
@@ -51,29 +56,35 @@ class TransactionGrouper:
                     transactionCount=len(categoryTransactions),
                     monthEndDate=monthEndDate,
                     transactions=categoryTransactions,
+                    mappingRule=rule,
                 )
             )
-            logger.debug("Group created; category='%s', transactions=%d, totalAmount=%.2f",
-                        category, len(categoryTransactions), totalAmount)
+            logger.debug("Group created; category='%s', debitAccount='%s', transactions=%d, totalAmount=%.2f",
+                        category, rule.debitAccount, len(categoryTransactions), totalAmount)
 
         return individual, groups
 
-    def __canGroup(self, transaction: Transaction) -> bool:
+    def __findMatchingRule(self, transaction: Transaction) -> Optional[MappingRule]:
         mappingRules = self.configuration.mappingRules
 
-        # Direct category match
+        # Direct category match: check patterns first, then fall back to catch-all
         if transaction.category in mappingRules:
-            rule = mappingRules[transaction.category]
-            if rule.pattern:
-                return self.__matchesPattern(transaction.merchant, rule.pattern)
-            return True
+            catchAll: Optional[MappingRule] = None
+            for rule in mappingRules[transaction.category]:
+                if rule.pattern:
+                    if self.__matchesPattern(transaction.merchant, rule.pattern):
+                        return rule
+                elif catchAll is None:
+                    catchAll = rule
+            return catchAll
 
-        # Pattern-based matching
-        for rule in mappingRules.values():
-            if rule.pattern and self.__matchesPattern(transaction.merchant, rule.pattern):
-                return True
+        # Pattern-based matching across all categories
+        for rules in mappingRules.values():
+            for rule in rules:
+                if rule.pattern and self.__matchesPattern(transaction.merchant, rule.pattern):
+                    return rule
 
-        return False
+        return None
 
     def __matchesPattern(self, text: str, pattern: str) -> bool:
         try:
