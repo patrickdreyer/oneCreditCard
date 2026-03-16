@@ -177,3 +177,62 @@ class TestTransactionGrouper:
         assert individual[0].merchant == "Taxi"
         assert groups[0].transactionCount == 1
         assert groups[0].transactions[0].merchant == "SBB CFF FFS"
+
+    def test_group_multiRuleCategory_separateGroupsPerRule(self, writeConfig):
+        # arrange
+        configData = {
+            "creditAccount": "2110",
+            "mapping": {
+                "Fahrzeug": [
+                    {"pattern": ".*Tankstelle.*", "description": "Auto; Diesel", "debitAccount": "6210"},
+                    {"description": "Auto; Sonstiges", "debitAccount": "6220"}
+                ]
+            },
+            "columns": []
+        }
+        config = Configuration(writeConfig(configData))
+        testee = TransactionGrouper(config)
+        transactions = [
+            Transaction("Fahrzeug", "Migrol Tankstelle", datetime(2025, 7, 10), None, None, 80.00),
+            Transaction("Fahrzeug", "Migrol Tankstelle", datetime(2025, 7, 20), None, None, 70.00),
+            Transaction("Fahrzeug", "KFZ Werkstatt", datetime(2025, 7, 15), None, None, 200.00),
+        ]
+
+        # act
+        individual, groups = testee.group(iter(transactions))
+
+        # assert
+        assert len(individual) == 0
+        assert len(groups) == 2
+        diesel = next(g for g in groups if g.mappingRule.debitAccount == "6210")
+        other = next(g for g in groups if g.mappingRule.debitAccount == "6220")
+        assert diesel.totalAmount == 150.00
+        assert diesel.transactionCount == 2
+        assert other.totalAmount == 200.00
+        assert other.transactionCount == 1
+
+    def test_group_multiRuleCategory_storesMappingRuleInGroup(self, writeConfig):
+        # arrange
+        configData = {
+            "creditAccount": "2110",
+            "mapping": {
+                "Fahrzeug": [
+                    {"pattern": ".*Tankstelle.*", "description": "Auto; Diesel", "debitAccount": "6210"}
+                ]
+            },
+            "columns": []
+        }
+        config = Configuration(writeConfig(configData))
+        testee = TransactionGrouper(config)
+        transactions = [
+            Transaction("Fahrzeug", "Migrol Tankstelle", datetime(2025, 7, 10), None, None, 80.00),
+        ]
+
+        # act
+        _, groups = testee.group(iter(transactions))
+
+        # assert
+        assert len(groups) == 1
+        assert groups[0].mappingRule is not None
+        assert groups[0].mappingRule.description == "Auto; Diesel"
+        assert groups[0].mappingRule.debitAccount == "6210"

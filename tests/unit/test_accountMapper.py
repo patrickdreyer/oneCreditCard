@@ -2,7 +2,7 @@ from datetime import datetime
 import pytest
 
 from accountMapper import AccountMapper
-from configuration import Configuration
+from configuration import Configuration, MappingRule
 from parsers.transaction import Transaction
 from transactionGrouper import Group
 
@@ -198,3 +198,59 @@ class TestAccountMapper:
         assert len(result) == 2
         assert result[0].mappedDescription == "Verpflegung"
         assert result[1].mappedDescription == "Unknown"
+
+    def test_mapGroups_groupWithMappingRule_usesStoredRule(self, writeConfig):
+        # arrange
+        rule = MappingRule(description="Auto; Diesel", debitAccount="6210")
+        group = Group(
+            category="Fahrzeug",
+            totalAmount=80.00,
+            transactionCount=1,
+            monthEndDate=datetime(2025, 7, 31),
+            transactions=[],
+            mappingRule=rule,
+        )
+        configData = {
+            "creditAccount": "2110",
+            "mapping": {},
+            "columns": []
+        }
+        config = Configuration(writeConfig(configData))
+        testee = AccountMapper(config)
+
+        # act
+        result = list(testee.mapGroups([group]))
+
+        # assert
+        assert len(result) == 1
+        assert result[0].mappedDescription == "Auto; Diesel"
+        assert result[0].debitAccount == "6210"
+
+    def test_mapTransactions_multiRuleCategory_patternMatchedRule(self, writeConfig):
+        # arrange
+        configData = {
+            "creditAccount": "2110",
+            "mapping": {
+                "Fahrzeug": [
+                    {"pattern": ".*Tankstelle.*", "description": "Auto; Diesel", "debitAccount": "6210"},
+                    {"description": "Auto; Sonstiges", "debitAccount": "6220"}
+                ]
+            },
+            "columns": []
+        }
+        config = Configuration(writeConfig(configData))
+        testee = AccountMapper(config)
+        transactions = [
+            Transaction("Fahrzeug", "Migrol Tankstelle", datetime(2025, 7, 10), None, None, 80.00),
+            Transaction("Fahrzeug", "KFZ Werkstatt", datetime(2025, 7, 15), None, None, 200.00),
+        ]
+
+        # act
+        result = list(testee.mapTransactions(transactions))
+
+        # assert
+        assert len(result) == 2
+        assert result[0].mappedDescription == "Auto; Diesel"
+        assert result[0].debitAccount == "6210"
+        assert result[1].mappedDescription == "Auto; Sonstiges"
+        assert result[1].debitAccount == "6220"
