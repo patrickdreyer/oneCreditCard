@@ -34,6 +34,17 @@
 1. **Mapping Flow Rules**: [mapping-flow.instructions.md](.github/instructions/mapping-flow.instructions.md)
 1. **Parser Refactor Prompt**: [refactor-parser.prompt.md](.github/prompts/refactor-parser.prompt.md)
 1. **Validation Prompt**: [validate-workspace.prompt.md](.github/prompts/validate-workspace.prompt.md)
+1. **PR Creation Prompt**: [create-pr.prompt.md](.github/prompts/create-pr.prompt.md)
+
+## GitHub Workflow
+
+1. **Authentication**: Use `gh auth login` once per environment and verify with `gh auth status`
+1. **PR Creation**: Prefer `gh pr create` over browser-only flows when GitHub CLI is available
+1. **PR Quality**: Create PRs with a concise, appropriate title and a structured description that explains summary and key changes
+1. **Assignee**: After creating a PR, add the current user as assignee with `gh pr edit <pr> --add-assignee "@me"`
+1. **Manual Metadata**: Leave room for follow-up manual updates to labels, projects, and milestone after PR creation
+1. **Projects Scope**: If project updates are needed through `gh`, refresh auth with `gh auth refresh -s project`
+1. **Merge Flow**: Do not enable auto-merge by default. Prefer manual merge after review, then delete the remote branch when appropriate
 
 ## Runtime Constraints
 
