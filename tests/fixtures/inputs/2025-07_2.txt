@@ -82,11 +82,23 @@ Erweiterte Suchoptionen Erweiterte Suchoptionen schliessen
 
 Juli
 
+Fahrzeug
+
+*Gasstation 2*
+15.07.2025 00:03 Chur
+*92.25*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
 Allgemeines
 
 *Rechnungsgebühr*
 14.07.2025
 *2.00*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
+Fahrzeug
+
+*Main station parking*
+14.07.2025 23:25 Wollerau
+*9.00*  CHF
 <https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
 Reisen
 

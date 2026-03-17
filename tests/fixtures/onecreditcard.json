@@ -10,23 +10,24 @@
       "debitAccount": "5821"
     },
     "Transport": {
-      "pattern": "^(SBB|CFF|FFS|Bus|Tram).*",
+      "pattern": "^(SBB|CFF|FFS|Bus|Tram)",
       "description": "Öffentlicher Verkehr",
       "debitAccount": "6282"
     },
     "Fahrzeug": [
       {
-        "pattern": ".*Tankstelle.*",
+        "pattern": "Gasstation",
         "description": "Auto; Diesel",
         "debitAccount": "6210"
       },
       {
-        "description": "Auto; Sonstiges",
-        "debitAccount": "6220"
+        "pattern": "parking",
+        "description": "Auto; Parkgebühren",
+        "debitAccount": "6232"
       }
     ],
     "Online Shopping": {
-      "pattern": ".*(Amazon|eBay|Zalando).*",
+      "pattern": "(Amazon|eBay|Zalando)",
       "description": "Online Einkäufe",
       "debitAccount": "5811"
     }
