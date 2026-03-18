@@ -75,6 +75,9 @@ class Configuration:
             logger.error("Invalid columns type; type='%s'", type(self._config['columns']).__name__)
             raise ValueError("columns must be an array")
 
+        for columnConfig in self._config['columns']:
+            self.__validateColumn(columnConfig)
+
         ignoreConfig = self._config.get('ignore', {})
         if 'transactions' in ignoreConfig:
             for pattern in ignoreConfig['transactions']:
@@ -96,14 +99,11 @@ class Configuration:
             if 'pattern' in rule:
                 self.__validatePattern(rule['pattern'], f"mapping rule for '{category}'")
 
-        if not isinstance(self._config['columns'], list):
-            logger.error("Invalid columns type; type='%s'", type(self._config['columns']).__name__)
-            raise ValueError("columns must be an array")
-
-        ignoreConfig = self._config.get('ignore', {})
-        if 'transactions' in ignoreConfig:
-            for pattern in ignoreConfig['transactions']:
-                self.__validatePattern(pattern, "ignore transaction pattern")
+    def __validateColumn(self, columnConfig: dict) -> None:
+        if columnConfig.get('type') == "date" and not columnConfig.get('format'):
+            name = columnConfig.get('name', '<unknown>')
+            logger.error("Date column missing required format; column='%s'", name)
+            raise ValueError(f"Date column '{name}' must have a format")
 
     @staticmethod
     def __validatePattern(pattern: str, context: str) -> None:

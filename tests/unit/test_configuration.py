@@ -8,7 +8,7 @@ class TestConfiguration:
         configPath = writeConfig({
             "creditAccount": "2110",
             "mapping": {"Food": {"description": "Meals", "debitAccount": "5821"}},
-            "columns": [{"name": "Date", "type": "date"}]
+            "columns": [{"name": "Date", "type": "date", "format": "DD.MM.YY"}]
         })
 
         # act
@@ -114,6 +114,18 @@ class TestConfiguration:
 
         # act & assert
         with pytest.raises(ValueError, match="Invalid regex pattern in ignore transaction pattern"):
+            Configuration(filePath)
+
+    def test_ctor_dateColumnMissingFormat_error(self, writeConfig):
+        # arrange
+        filePath = writeConfig({
+            "creditAccount": "2110",
+            "mapping": {},
+            "columns": [{"name": "Datum", "type": "date"}]
+        })
+
+        # act & assert
+        with pytest.raises(ValueError, match="Date column 'Datum' must have a format"):
             Configuration(filePath)
 
     def test_ctor_multiRuleList_loaded(self, writeConfig):
