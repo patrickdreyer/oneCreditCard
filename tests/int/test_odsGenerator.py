@@ -206,6 +206,7 @@ class TestOdsGenerator:
 
         assert amountCell.getAttribute("valuetype") == "float"
         assert amountCell.getAttribute("value") == "25.35"
+        assert amountCell.getAttribute("stylename") == "amountCell"
         assert self.__getCellText(amountCell) == "25.35"
 
     def test_generate_amountChfColumn_wholeNumber_noTrailingZero(self):
@@ -226,6 +227,7 @@ class TestOdsGenerator:
         amountCell = cells[4]
 
         assert amountCell.getAttribute("value") == "70"
+        assert amountCell.getAttribute("stylename") == "amountCell"
         assert self.__getCellText(amountCell) == "70.00"
 
     def test_generate_dateColumn_dateValueType(self):
