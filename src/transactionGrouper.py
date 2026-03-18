@@ -13,7 +13,7 @@ logger = getLogger(__name__)
 
 @dataclass
 class Group:
-    category: str
+    description: str
     totalAmount: float
     transactionCount: int
     monthEndDate: datetime
@@ -26,13 +26,13 @@ class TransactionGrouper:
         self.configuration = configuration
 
     def group(self, transactions: Iterator[Transaction]) -> Tuple[List[Transaction], List[Group]]:
-        # key: (category, debitAccount) to separate groups for different rules in the same category
+        # key: (description, debitAccount) to group by mapping rule, not source category
         toBeGrouped: Dict[Tuple[str, str], Dict] = {}
         individual = []
         for transaction in transactions:
             rule = self.__findMatchingRule(transaction)
             if rule:
-                key = (transaction.category, rule.debitAccount)
+                key = (rule.description, rule.debitAccount)
                 if key not in toBeGrouped:
                     toBeGrouped[key] = {'rule': rule, 'transactions': []}
                 toBeGrouped[key]['transactions'].append(transaction)
@@ -44,30 +44,30 @@ class TransactionGrouper:
                             transaction.merchant, transaction.category)
 
         groups = []
-        for (category, _), entry in toBeGrouped.items():
+        for (description, _), entry in toBeGrouped.items():
             rule = entry['rule']
-            categoryTransactions = entry['transactions']
-            totalAmount = sum(t.amount for t in categoryTransactions)
-            monthEndDate = self.__getMonthEndDate(categoryTransactions[0].date)
+            groupTransactions = entry['transactions']
+            totalAmount = sum(t.amount for t in groupTransactions)
+            monthEndDate = self.__getMonthEndDate(groupTransactions[0].date)
             groups.append(
                 Group(
-                    category=category,
+                    description=description,
                     totalAmount=totalAmount,
-                    transactionCount=len(categoryTransactions),
+                    transactionCount=len(groupTransactions),
                     monthEndDate=monthEndDate,
-                    transactions=categoryTransactions,
+                    transactions=groupTransactions,
                     mappingRule=rule,
                 )
             )
-            logger.debug("Group created; category='%s', debitAccount='%s', transactions=%d, totalAmount=%.2f",
-                        category, rule.debitAccount, len(categoryTransactions), totalAmount)
+            logger.debug("Group created; description='%s', debitAccount='%s', transactions=%d, totalAmount=%.2f",
+                        description, rule.debitAccount, len(groupTransactions), totalAmount)
 
         return individual, groups
 
     def __findMatchingRule(self, transaction: Transaction) -> Optional[MappingRule]:
         mappingRules = self.configuration.mappingRules
 
-        # Direct category match: check patterns first, then fall back to catch-all
+        # Pass 1: direct category match — check patterns first, then catch-all
         if transaction.category in mappingRules:
             catchAll: Optional[MappingRule] = None
             for rule in mappingRules[transaction.category]:
@@ -76,9 +76,10 @@ class TransactionGrouper:
                         return rule
                 elif catchAll is None:
                     catchAll = rule
-            return catchAll
+            if catchAll:
+                return catchAll
 
-        # Pattern-based matching across all categories
+        # Pass 2: pattern-based matching across all categories
         for rules in mappingRules.values():
             for rule in rules:
                 if rule.pattern and self.__matchesPattern(transaction.merchant, rule.pattern):

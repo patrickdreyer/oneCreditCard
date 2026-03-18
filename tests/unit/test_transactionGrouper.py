@@ -42,7 +42,7 @@ class TestTransactionGrouper:
         assert len(individual) == 0
         assert len(groups) == 1
         group = groups[0]
-        assert group.category == "Essen & Trinken"
+        assert group.description == "Verpflegung"
         assert group.totalAmount == 55.50
         assert group.transactionCount == 2
         assert group.monthEndDate == datetime(2025, 7, 31)
@@ -80,7 +80,7 @@ class TestTransactionGrouper:
         # assert
         assert len(individual) == 1
         assert len(groups) == 2
-        assert individual[0].category == "Unknown"
+        assert individual[0].category == "Unknown"  # Transaction.category, not Group.description
 
     def test_group_multipleTransactionsSameCategory_singleGroup(self):
         # arrange
@@ -236,3 +236,33 @@ class TestTransactionGrouper:
         assert groups[0].mappingRule is not None
         assert groups[0].mappingRule.description == "Auto; Diesel"
         assert groups[0].mappingRule.debitAccount == "6210"
+
+    def test_group_crossCategoryPatternMatch_singleGroup(self, writeConfig):
+        # arrange
+        configData = {
+            "creditAccount": "2110",
+            "mapping": {
+                "Fahrzeug": [
+                    {"pattern": "parking", "description": "Auto; Parkgebühren", "debitAccount": "6232"}
+                ]
+            },
+            "columns": []
+        }
+        config = Configuration(writeConfig(configData))
+        testee = TransactionGrouper(config)
+        transactions = [
+            Transaction("Fahrzeug", "Main station parking", datetime(2025, 7, 14), None, None, 9.00),
+            Transaction("TRX987654321", "City parking", datetime(2025, 7, 24), None, None, 50.00),
+            Transaction("Fahrzeug", "Main station parking", datetime(2025, 7, 28), None, None, 14.00),
+        ]
+
+        # act
+        individual, groups = testee.group(iter(transactions))
+
+        # assert
+        assert len(individual) == 0
+        assert len(groups) == 1
+        assert groups[0].totalAmount == 73.00
+        assert groups[0].transactionCount == 3
+        assert groups[0].mappingRule.description == "Auto; Parkgebühren"
+        assert groups[0].mappingRule.debitAccount == "6232"

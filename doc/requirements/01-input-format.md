@@ -21,6 +21,10 @@ Categories found in Viseca exports:
 - **Diverses** (Miscellaneous)
 - **Dienstleistung** (Services)
 
+### Missing Categories
+
+Viseca sometimes exports a transaction ID (e.g. `TRX123245678`) instead of a proper category name. The parser extracts whatever text appears in the category position. Downstream components must handle non-standard category values gracefully via cross-category pattern matching.
+
 ## Multi-Currency
 
 - **Base Currency**: All transactions have amounts in CHF (Swiss Francs)

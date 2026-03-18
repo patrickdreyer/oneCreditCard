@@ -146,11 +146,12 @@ class TestAccountMapper:
     def test_mapGroups_mappedCategory_bookingEntry(self):
         # arrange
         group = Group(
-            category="Essen & Trinken",
+            description="Verpflegung",
             totalAmount=100.50,
             transactionCount=3,
             monthEndDate=datetime(2025, 7, 31),
-            transactions=[]
+            transactions=[],
+            mappingRule=MappingRule(description="Verpflegung", debitAccount="5821"),
         )
 
         # act
@@ -168,7 +169,7 @@ class TestAccountMapper:
     def test_mapGroups_unmappedCategory_bookingEntryWithoutDebit(self):
         # arrange
         group = Group(
-            category="Unknown",
+            description="Unknown",
             totalAmount=50.00,
             transactionCount=1,
             monthEndDate=datetime(2025, 7, 31),
@@ -187,7 +188,8 @@ class TestAccountMapper:
     def test_mapGroups_multipleGroups_multipleEntries(self):
         # arrange
         groups = [
-            Group("Essen & Trinken", 100.50, 3, datetime(2025, 7, 31), []),
+            Group("Verpflegung", 100.50, 3, datetime(2025, 7, 31), [],
+                  mappingRule=MappingRule(description="Verpflegung", debitAccount="5821")),
             Group("Unknown", 50.00, 1, datetime(2025, 7, 31), [])
         ]
 
@@ -203,7 +205,7 @@ class TestAccountMapper:
         # arrange
         rule = MappingRule(description="Auto; Diesel", debitAccount="6210")
         group = Group(
-            category="Fahrzeug",
+            description="Fahrzeug",
             totalAmount=80.00,
             transactionCount=1,
             monthEndDate=datetime(2025, 7, 31),
@@ -254,3 +256,33 @@ class TestAccountMapper:
         assert result[0].debitAccount == "6210"
         assert result[1].mappedDescription == "Auto; Sonstiges"
         assert result[1].debitAccount == "6220"
+
+    def test_mapTransactions_crossCategoryPatternFallback_bookingEntry(self):
+        # arrange
+        transactions = [
+            Transaction("TRX123245678", "SBB CFF FFS", datetime(2025, 7, 24), None, None, 6.40)
+        ]
+
+        # act
+        result = list(self.testee.mapTransactions(transactions))
+
+        # assert
+        assert len(result) == 1
+        entry = result[0]
+        assert entry.mappedDescription == "Öffentlicher Verkehr"
+        assert entry.debitAccount == "6282"
+
+    def test_mapTransactions_crossCategoryNoPatternMatch_bookingEntryWithoutDebit(self):
+        # arrange
+        transactions = [
+            Transaction("TRX999999999", "Unknown Merchant", datetime(2025, 7, 24), None, None, 10.00)
+        ]
+
+        # act
+        result = list(self.testee.mapTransactions(transactions))
+
+        # assert
+        assert len(result) == 1
+        entry = result[0]
+        assert entry.mappedDescription == "Unknown Merchant"
+        assert entry.debitAccount is None
