@@ -16,7 +16,10 @@ The system must intelligently process, filter, group, and map credit card transa
 The system must consolidate transactions for accounting efficiency:
 
 - **Configurable Mapping**: Category-to-account mapping via JSON configuration file
-- **Group by Category**: Transactions with same mapped category are grouped together
+- **Mapping Key = Source Category**: Each key in the JSON `mapping` object corresponds to a category from the Viseca source data
+- **Group by Mapping Rule**: Transactions matching the same mapping rule (same description + debit account) are grouped together, regardless of their source category
+- **Cross-Category Pattern Matching**: When a transaction's source category has no applicable rule (no mapping key, or no matching pattern and no catch-all), patterns from all mapping rules are tried. Matched transactions join the same group as direct category matches for that rule
+- **TRX-ID as Category**: Viseca sometimes exports a transaction ID (e.g. `TRX123245678`) instead of a category name. These transactions must still be matched via cross-category pattern fallback and grouped correctly
 - **Representative Date**: Use months last day as date for the grouped entry
 - **Consolidated Output**: One line per group instead of multiple lines per transaction
 - **Flexible Matching**: Support case-insensitive, regular expression matching for categories

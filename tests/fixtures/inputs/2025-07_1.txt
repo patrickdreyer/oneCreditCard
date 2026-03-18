@@ -124,6 +124,12 @@ TRX123245678
 24.07.2025 17:09
 *6.40*  CHF
 <https://one.viseca.ch/de/transaktionen/detail/TRX123245678>
+TRX987654321
+
+*City parking*
+24.07.2025 15:30
+*50.00*  CHF
+<https://one.viseca.ch/de/transaktionen/detail/TRX987654321>
 Essen & Trinken
 
 *- My Lunch Place*
