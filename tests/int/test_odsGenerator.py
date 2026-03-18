@@ -187,6 +187,119 @@ class TestOdsGenerator:
         assert values[2] == ""  # Optional Saldo column
         assert values[3] == ""  # Optional KS1 column
 
+    def test_generate_amountChfColumn_floatValueType(self):
+        # arrange
+        transaction = Transaction("Food", "Restaurant", datetime(2025, 7, 15), "12:30", "Zurich", 25.35)
+        entries = [BookingEntry("Verpflegung", "5821", "2110", transaction=transaction)]
+        outputPath = self.outputDir / "test.ods"
+
+        # act
+        self.testee.generate(entries, outputPath)
+
+        # assert
+        doc = load(str(outputPath))
+        tables = doc.spreadsheet.getElementsByType(Table)
+        rows = tables[0].getElementsByType(TableRow)
+        dataRow = rows[1]
+        cells = dataRow.getElementsByType(TableCell)
+        amountCell = cells[4]
+
+        assert amountCell.getAttribute("valuetype") == "float"
+        assert amountCell.getAttribute("value") == "25.35"
+        assert amountCell.getAttribute("stylename") == "amountCell"
+        assert self.__getCellText(amountCell) == "25.35"
+
+    def test_generate_amountChfColumn_wholeNumber_noTrailingZero(self):
+        # arrange
+        transaction = Transaction("Food", "Restaurant", datetime(2025, 7, 15), "12:30", "Zurich", 70.0)
+        entries = [BookingEntry("Verpflegung", "5821", "2110", transaction=transaction)]
+        outputPath = self.outputDir / "whole.ods"
+
+        # act
+        self.testee.generate(entries, outputPath)
+
+        # assert
+        doc = load(str(outputPath))
+        tables = doc.spreadsheet.getElementsByType(Table)
+        rows = tables[0].getElementsByType(TableRow)
+        dataRow = rows[1]
+        cells = dataRow.getElementsByType(TableCell)
+        amountCell = cells[4]
+
+        assert amountCell.getAttribute("value") == "70"
+        assert amountCell.getAttribute("stylename") == "amountCell"
+        assert self.__getCellText(amountCell) == "70.00"
+
+    def test_generate_dateColumn_dateValueType(self):
+        # arrange
+        transaction = Transaction("Food", "Restaurant", datetime(2025, 7, 15), "12:30", "Zurich", 25.50)
+        entries = [BookingEntry("Verpflegung", "5821", "2110", transaction=transaction)]
+        outputPath = self.outputDir / "test.ods"
+
+        # act
+        self.testee.generate(entries, outputPath)
+
+        # assert
+        doc = load(str(outputPath))
+        tables = doc.spreadsheet.getElementsByType(Table)
+        rows = tables[0].getElementsByType(TableRow)
+        dataRow = rows[1]
+        cells = dataRow.getElementsByType(TableCell)
+        dateCell = cells[0]
+
+        assert dateCell.getAttribute("valuetype") == "date"
+        assert dateCell.getAttribute("datevalue") == "2025-07-15"
+        assert dateCell.getAttribute("stylename") == "dateCellDDMMYY"
+        assert self.__getCellText(dateCell) == "15.07.25"
+
+    def test_generate_dateColumnYYYY_dateValueType(self, writeConfig):
+        # arrange
+        configData = {
+            "creditAccount": "2110",
+            "mapping": {},
+            "columns": [{"name": "Datum", "type": "date", "format": "DD.MM.YYYY"}]
+        }
+        config = Configuration(writeConfig(configData))
+        testee = OdsGenerator(config)
+        transaction = Transaction("Food", "Restaurant", datetime(2025, 7, 15), None, None, 25.50)
+        entries = [BookingEntry("Verpflegung", "5821", "2110", transaction=transaction)]
+        outputPath = self.outputDir / "yyyy.ods"
+
+        # act
+        testee.generate(entries, outputPath)
+
+        # assert
+        doc = load(str(outputPath))
+        tables = doc.spreadsheet.getElementsByType(Table)
+        rows = tables[0].getElementsByType(TableRow)
+        dataRow = rows[1]
+        cells = dataRow.getElementsByType(TableCell)
+        dateCell = cells[0]
+
+        assert dateCell.getAttribute("valuetype") == "date"
+        assert dateCell.getAttribute("datevalue") == "2025-07-15"
+        assert dateCell.getAttribute("stylename") == "dateCellDDMMYYYY"
+        assert self.__getCellText(dateCell) == "15.07.2025"
+
+    def test_generate_accountColumns_floatValueType(self):
+        # arrange
+        transaction = Transaction("Food", "Restaurant", datetime(2025, 7, 15), "12:30", "Zurich", 25.50)
+        entries = [BookingEntry("Verpflegung", "5821", "2110", transaction=transaction)]
+        outputPath = self.outputDir / "test.ods"
+
+        # act
+        self.testee.generate(entries, outputPath)
+
+        # assert
+        doc = load(str(outputPath))
+        tables = doc.spreadsheet.getElementsByType(Table)
+        rows = tables[0].getElementsByType(TableRow)
+        dataRow = rows[1]
+        cells = dataRow.getElementsByType(TableCell)
+
+        assert cells[2].getAttribute("valuetype") == "float"  # debitAccount
+        assert cells[3].getAttribute("valuetype") == "float"  # creditAccount
+
     def __getCellText(self, cell: TableCell) -> str:
         paragraphs = cell.getElementsByType(P)
         if paragraphs:
