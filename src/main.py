@@ -4,6 +4,10 @@ import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
+try:
+    from _version import __version__
+except ImportError:
+    __version__ = "0.0.0.dev0"
 from accountMapper import AccountMapper
 from configuration import Configuration
 from logging_config import setupLogging, getLogger
@@ -33,6 +37,11 @@ Examples:
   # Enable debug logging
   onecreditcard --log-level DEBUG
         '''
+    )
+    parser.add_argument(
+        '--version', '-v',
+        action='version',
+        version=f'%(prog)s {__version__}'
     )
     parser.add_argument(
         '--folder', '-f',

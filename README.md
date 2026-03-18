@@ -1,5 +1,10 @@
 # oneCreditCard
 
+[![GitHub Release](https://img.shields.io/github/v/release/patrickdreyer/oneCreditCard)](https://github.com/patrickdreyer/oneCreditCard/releases/latest)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/downloads/release/python-3130/)
+[![Release](https://github.com/patrickdreyer/oneCreditCard/actions/workflows/release.yml/badge.svg)](https://github.com/patrickdreyer/oneCreditCard/actions/workflows/release.yml)
+
 A Python tool that processes Viseca credit card text exports and converts them into accounting-ready OpenOffice Calc spreadsheets.
 
 **Input**: Unstructured text files exported from Viseca/Migros Cumulus credit card web portal  
@@ -47,6 +52,7 @@ python src/main.py --log-file /var/log/onecreditcard.log
 
 ### Parameters
 
+- **--version, -v**: Print version and exit
 - **--folder, -f**: Data folder path (default: current working directory)
   - Contains input text files
   - Output ODS file will be created here
@@ -88,6 +94,7 @@ python src/main.py --log-file /var/log/onecreditcard.log
 - **[Input Format](doc/requirements/01-input-format.md)** - Viseca text export structure  
 - **[Output Format](doc/requirements/02-output-format.md)** - OpenOffice Calc file structure and format requirements
 - **[Transaction Processing](doc/requirements/03-transaction-processing.md)** - Business logic for filtering, grouping, mapping, and processing transactions
+- **[Versioning](doc/requirements/05-versioning.md)** - Git-tag versioning, --version flag, and automated releases
 
 📁 **[doc/technical/](doc/technical/README.md)** - Technical implementation
 
@@ -96,6 +103,7 @@ python src/main.py --log-file /var/log/onecreditcard.log
 - **[Configuration Format](doc/technical/03-configuration-format.md)** - Configuration format comparison and decision
 - **[Test Strategy](doc/technical/04-test-strategy.md)** - Honeycomb + Component testing approach and implementation
 - **[Code Organization](doc/technical/05-code-organization.md)** - Project structure, modules, and file organization
+- **[Versioning and Release](doc/technical/07-versioning-release.md)** - hatch-vcs setup and GitHub Actions release workflow
 
 📁 **[doc/development/](doc/development/README.md)** - Development guidance
 

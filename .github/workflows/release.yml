@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt hatch-vcs
+
+      - name: Install package
+        run: pip install -e .
+
+      - name: Validate
+        run: python -m compileall src/ && pylint src/ tests/ && pytest
+
+      - name: Build
+        run: ./build.sh
+
+      - name: Verify binary
+        run: ./dist/onecreditcard --version
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/onecreditcard
+          generate_release_notes: true

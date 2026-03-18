@@ -13,6 +13,16 @@ class TestMain:
         # arrange
         monkeypatch.chdir(tmp_path)
 
+    def test_main_versionFlag_printsVersion(self, capsys):
+        # act
+        with patch.object(sys, 'argv', ['onecreditcard', '--version']):
+            with pytest.raises(SystemExit) as excInfo:
+                main()
+
+        # assert
+        assert excInfo.value.code == 0
+        assert 'onecreditcard' in capsys.readouterr().out
+
     def test_main_singleFile_successfulProcessing(self, setupInputDir, writeConfig):
         # arrange
         inputDir = setupInputDir(['2025-07_1.txt'])

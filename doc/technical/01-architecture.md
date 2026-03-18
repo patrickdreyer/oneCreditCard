@@ -19,6 +19,7 @@
 
 ## Parameter Default Behavior
 
+- **--version, -v**: Print version and exit
 - **No Parameters**: Process last month's data in current directory with default config
 - **Month Detection**: Automatically determine previous month from current date
 - **Config Discovery**: Look for configuration file in data folder with standard name

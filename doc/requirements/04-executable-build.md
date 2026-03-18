@@ -18,3 +18,5 @@ This document describes how to build a standalone executable of oneCreditCard th
 - **Easy Distribution**: Single file that can be copied anywhere
 - **Isolated Environment**: Development stays in container, execution on host
 - **Version Management**: Each build is self-contained with specific dependency versions
+
+Builds are also triggered automatically in CI when a `v*` tag is pushed to `main` (see [Versioning](05-versioning.md)).

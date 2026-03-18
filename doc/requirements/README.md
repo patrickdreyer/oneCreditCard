@@ -36,3 +36,4 @@ Convert monthly Viseca credit card statements from browser text exports into acc
 - **[Output Format](02-output-format.md)** - OpenOffice Calc file structure and format requirements
 - **[Transaction Processing](03-transaction-processing.md)** - Business logic for filtering, grouping, mapping, and processing transactions
 - **[Executable Build](04-executable-build.md)** - Build standalone executable for host usage without Python installation
+- **[Versioning](05-versioning.md)** - Git-tag-based versioning, --version CLI flag, and automated GitHub Releases
