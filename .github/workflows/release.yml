@@ -17,6 +17,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Verify tag is on main
+        run: |
+          git fetch origin main
+          git merge-base --is-ancestor ${{ github.sha }} origin/main || \
+            (echo "Tag commit is not on main branch; aborting release." && exit 1)
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'

@@ -6,8 +6,13 @@ from pathlib import Path
 
 try:
     from _version import __version__
-except ImportError:
-    __version__ = "0.0.0.dev0"
+except ModuleNotFoundError:
+    from importlib.metadata import PackageNotFoundError, version as _pkg_version
+    try:
+        __version__ = _pkg_version("oneCreditCard")
+    except PackageNotFoundError:
+        __version__ = "0.0.0.dev0"
+
 from accountMapper import AccountMapper
 from configuration import Configuration
 from logging_config import setupLogging, getLogger

@@ -1,4 +1,5 @@
 import json
+import re
 import sys
 from unittest.mock import patch
 
@@ -20,8 +21,9 @@ class TestMain:
                 main()
 
         # assert
+        out = capsys.readouterr().out
         assert excInfo.value.code == 0
-        assert 'onecreditcard' in capsys.readouterr().out
+        assert re.match(r'onecreditcard \d+', out) is not None
 
     def test_main_singleFile_successfulProcessing(self, setupInputDir, writeConfig):
         # arrange
