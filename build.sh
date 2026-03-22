@@ -8,6 +8,9 @@ echo "Building onecreditcard executable..."
 # Clean previous builds
 rm -rf build dist
 
+# Install package in editable mode — generates src/_version.py from current git tag
+pip install -e .
+
 # Build with PyInstaller
 pyinstaller \
     --name onecreditcard \

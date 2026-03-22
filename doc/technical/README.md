@@ -16,3 +16,4 @@ Implementation details for the oneCreditCard tool.
 - **[Test Strategy](04-test-strategy.md)** - Honeycomb + Component testing approach and implementation
 - **[Code Organization](05-code-organization.md)** - Project structure, modules, and file organization
 - **[Executable Build](06-executable-build.md)** - PyInstaller implementation for standalone executable creation
+- **[Versioning and Release](07-versioning-release.md)** - hatch-vcs setup, version generation, and GitHub Actions release workflow

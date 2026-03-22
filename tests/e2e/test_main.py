@@ -1,4 +1,5 @@
 import json
+import re
 import sys
 from unittest.mock import patch
 
@@ -12,6 +13,17 @@ class TestMain:
     def setup(self, tmp_path, monkeypatch):
         # arrange
         monkeypatch.chdir(tmp_path)
+
+    def test_main_versionFlag_printsVersion(self, capsys):
+        # act
+        with patch.object(sys, 'argv', ['onecreditcard', '--version']):
+            with pytest.raises(SystemExit) as excInfo:
+                main()
+
+        # assert
+        out = capsys.readouterr().out
+        assert excInfo.value.code == 0
+        assert re.match(r'onecreditcard \d+', out) is not None
 
     def test_main_singleFile_successfulProcessing(self, setupInputDir, writeConfig):
         # arrange

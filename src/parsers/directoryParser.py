@@ -25,7 +25,7 @@ class DirectoryParser:
         fileCount = 0
         transactionCount = 0
 
-        for file in directory.glob(filePattern):
+        for file in sorted(directory.glob(filePattern)):
             try:
                 fileCount += 1
                 fileTransactions = 0

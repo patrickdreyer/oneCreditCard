@@ -208,3 +208,6 @@ __marimo__/
 
 # Generated output files
 *.ods
+
+# Version (auto-generated)
+src/_version.py
