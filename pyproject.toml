@@ -8,6 +8,9 @@ dynamic = ["version"]
 description = "Python tool converting Viseca credit card text exports into accounting-ready OpenOffice Calc spreadsheets"
 readme = "README.md"
 requires-python = "~= 3.13.0"
+dependencies = [
+  "odfpy>=1.4.0",
+]
 license = {text = "GPL-3.0-only"}
 authors = [
   {name = "Patrick Dreyer", email = "Patrick@Dreyer.name"}
